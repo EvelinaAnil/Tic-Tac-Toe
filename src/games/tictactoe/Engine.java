@@ -1,4 +1,4 @@
-package tictactoe;
+package games.tictactoe;
 
 public class Engine {
 }

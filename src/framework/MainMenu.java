@@ -1,8 +1,11 @@
 package framework;
 
+import java.util.List;
 import java.util.Scanner;
 
 public class MainMenu {
+
+    private final GameManager gameManager = new GameManager();
 
     public void show(User user, Scanner scanner) {
         boolean running = true;
@@ -19,7 +22,7 @@ public class MainMenu {
 
             switch (choice) {
                 case "1":
-                    System.out.println("Game kiezen komt hier.");
+                    showGames(scanner);
                     break;
 
                 case "2":
@@ -35,5 +38,33 @@ public class MainMenu {
                     System.out.println("Ongeldige keuze.");
             }
         }
+    }
+
+    private void showGames(Scanner scanner) {
+        List<Game> games = gameManager.getGames();
+
+        System.out.println();
+        System.out.println("Kies een spel:");
+
+        System.out.println("0. Terug");
+
+        for (int i = 0; i < games.size(); i++) {
+            System.out.println((i + 1) + ". " + games.get(i).getName());
+        }
+
+        System.out.print("Keuze: ");
+        int choice = Integer.parseInt(scanner.nextLine());
+
+        if (choice == 0) {
+            return;
+        }
+
+        if (choice < 1 || choice > games.size()) {
+            System.out.println("Ongeldige keuze.");
+            return;
+        }
+
+        Game selectedGame = games.get(choice - 1);
+        selectedGame.start();
     }
 }

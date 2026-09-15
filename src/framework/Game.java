@@ -1,4 +1,6 @@
 package framework;
 
-public class Game {
+public abstract class Game {
+    public abstract String getName();
+    public abstract void start();
 }

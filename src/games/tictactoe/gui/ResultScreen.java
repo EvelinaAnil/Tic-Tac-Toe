@@ -1,4 +1,4 @@
-package tictactoe.gui;
+package games.tictactoe.gui;
 
 public class ResultScreen {
 }
