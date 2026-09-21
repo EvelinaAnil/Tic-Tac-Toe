@@ -65,6 +65,6 @@ public class MainMenu {
         }
 
         Game selectedGame = games.get(choice - 1);
-        selectedGame.start();
+        selectedGame.start(scanner);
     }
 }
