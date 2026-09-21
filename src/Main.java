@@ -1,20 +1,12 @@
-import framework.MainMenu;
-import framework.User;
-import framework.UserManager;
+import framework.gui.AppWindow;
 
-import java.util.Scanner;
+import javax.swing.SwingUtilities;
 
 public class Main {
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-
-        System.out.print("Gebruikersnaam: ");
-        String username = scanner.nextLine();
-
-        UserManager userManager = new UserManager();
-        User user = userManager.login(username);
-
-        MainMenu mainMenu = new MainMenu();
-        mainMenu.show(user, scanner);
+        SwingUtilities.invokeLater(() -> {
+            AppWindow window = new AppWindow();
+            window.start();
+        });
     }
 }

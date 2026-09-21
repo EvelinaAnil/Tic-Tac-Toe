@@ -39,12 +39,24 @@ public class Board {
             return false;
         }
 
+        return placeMark(row, col, mark);
+    }
+
+    public boolean placeMark(int row, int col, char mark) {
+        if (row < 0 || row > 2 || col < 0 || col > 2) {
+            return false;
+        }
+
         if (cells[row][col] != ' ') {
             return false;
         }
 
         cells[row][col] = mark;
         return true;
+    }
+
+    public char getCell(int row, int col) {
+        return cells[row][col];
     }
 
     private int columnFromLetter(char letter) {
