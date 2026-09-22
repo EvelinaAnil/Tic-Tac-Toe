@@ -1,0 +1,26 @@
+.root {
+    -fx-background-color: #F7E49B;
+    -fx-text-background-color: black;
+}
+
+.button {
+    -fx-background-color: #A4CE8B;
+    -fx-border-radius: 20 20 20 20;
+    -fx-background-radius: 20 20 20 20;
+}
+
+.button:hover {
+    -fx-background-color: #86BCBD ;
+}
+
+.text-field {
+    -fx-background-color: #86BCBD;
+    -fx-border-radius: 20 20 20 20;
+    -fx-background-radius: 20 20 20 20;
+}
+
+.curved-title-text {
+    -fx-font-family: Horizon;
+    -fx-font-size: 40px;
+    -fx-fill: black;
+}
