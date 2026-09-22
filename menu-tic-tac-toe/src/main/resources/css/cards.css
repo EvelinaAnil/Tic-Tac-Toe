@@ -1,0 +1,7 @@
+.game-card {
+    -fx-background-radius: 25px;
+    -fx-pref-width: 180px;
+    -fx-pref-height: 260px;
+    -fx-min-width: 180px;
+    -fx-min-height: 260px;
+}

@@ -1,0 +1,11 @@
+@font-face {
+    font-family: 'Horizon';
+    src: url('../fonts/Horizon_Outlined.otf');
+}
+
+.custom-label {
+    -fx-font-family: 'Horizon';
+    -fx-font-size: 40.0px;
+    -fx-font-weight: bold;
+    -fx-fill: black;
+}
