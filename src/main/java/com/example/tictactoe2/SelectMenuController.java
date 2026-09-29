@@ -191,8 +191,8 @@ public class SelectMenuController implements Initializable {
     }
 
     private void showDifficultyMenu() {
-        // Rood wordt: Easy
-        addCardLabel(redCard, "Easy");
+        // Rood wordt: Easy met de 'easy.png' afbeelding
+        addCardContent(redCard, "/img/easy.png", "Easy");
         redCard.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
@@ -201,8 +201,8 @@ public class SelectMenuController implements Initializable {
             }
         });
 
-        // Groen wordt: Medium
-        addCardLabel(greenCard, "Medium");
+        // Groen wordt: Medium met de 'normal.png' afbeelding
+        addCardContent(greenCard, "/img/normal.png", "Medium");
         greenCard.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
@@ -211,8 +211,8 @@ public class SelectMenuController implements Initializable {
             }
         });
 
-        // Blauw (of een extra optie) wordt: Hard
-        addCardLabel(blueCard, "Hard");
+        // Blauw wordt: Hard met de 'hard.png' afbeelding
+        addCardContent(blueCard, "/img/hard.png", "Hard");
         blueCard.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
