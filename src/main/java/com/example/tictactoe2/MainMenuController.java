@@ -22,8 +22,13 @@ public class MainMenuController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        User user = Session.get().getUser();
-        String name = user != null ? user.getUsername() : "player";
+        User user = Session.getUser();
+
+        String name = "player";
+        if (user != null) {
+            name = user.getUsername();
+        }
+
         lblWelcome.setText("Welcome " + name);
     }
 
@@ -39,7 +44,7 @@ public class MainMenuController implements Initializable {
 
     @FXML
     private void onLogout() {
-        Session.get().setUser(null);
+        Session.setUser(null);
         Navigator.goTo("/Login.fxml");
     }
 }

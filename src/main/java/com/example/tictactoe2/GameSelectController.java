@@ -1,19 +1,18 @@
 package com.example.tictactoe2;
 
 import framework.Game;
-import games.tictactoe.TicTacToe;
+import java.util.List;
+import java.net.URL;
+import java.util.ResourceBundle;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 
-import java.net.URL;
-import java.util.ResourceBundle;
-
-/**
- * Lists the games from {@link framework.GameManager} as buttons, mirroring the
- * old Swing GameSelectScreen. Selecting a game opens its screen.
- */
+// Shows one button for each game we have.
+// The list of games comes from the GameManager (in the framework package).
 public class GameSelectController implements Initializable {
 
     @FXML
@@ -21,18 +20,30 @@ public class GameSelectController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        for (Game game : Session.get().getGameManager().getGames()) {
+        List<Game> games = Session.getGameManager().getGames();
+
+        for (int i = 0; i < games.size(); i++) {
+            final Game game = games.get(i);
+
             Button button = new Button(game.getName());
             button.setMaxWidth(220.0);
             button.setPrefHeight(40.0);
-            button.setOnAction(e -> launch(game));
+
+            // When the button is clicked, open that game.
+            button.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent event) {
+                    openGame(game);
+                }
+            });
+
             gamesBox.getChildren().add(button);
         }
     }
 
-    private void launch(Game game) {
-        // Each game maps to its own screen. Add more cases as games are added.
-        if (game instanceof TicTacToe) {
+    private void openGame(Game game) {
+        // Each game has its own screen. Check the name to know which one to open.
+        if (game.getName().equals("Tic-Tac-Toe")) {
             Navigator.goTo("/TicTacToe.fxml");
         }
     }

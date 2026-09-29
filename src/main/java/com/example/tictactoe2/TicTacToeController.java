@@ -1,6 +1,8 @@
 package com.example.tictactoe2;
 
 import games.tictactoe.Board;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -33,11 +35,20 @@ public class TicTacToeController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         for (int row = 0; row < 3; row++) {
             for (int col = 0; col < 3; col++) {
-                Button button = new Button(" ");
-                button.setPrefSize(90, 90);
                 final int r = row;
                 final int c = col;
-                button.setOnAction(e -> handleClick(r, c));
+
+                Button button = new Button(" ");
+                button.setPrefSize(90, 90);
+
+                // When this square is clicked, play a move there.
+                button.setOnAction(new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent event) {
+                        handleClick(r, c);
+                    }
+                });
+
                 buttons[row][col] = button;
                 grid.add(button, col, row);
             }
@@ -66,7 +77,11 @@ public class TicTacToeController implements Initializable {
             return;
         }
 
-        currentPlayer = (currentPlayer == 'X') ? 'O' : 'X';
+        if (currentPlayer == 'X') {
+            currentPlayer = 'O';
+        } else {
+            currentPlayer = 'X';
+        }
         lblStatus.setText("Player " + currentPlayer + "'s turn");
     }
 
