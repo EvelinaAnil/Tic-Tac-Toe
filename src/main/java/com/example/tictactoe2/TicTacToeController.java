@@ -34,6 +34,9 @@ public class TicTacToeController implements Initializable {
     private Computer computer;
     private  boolean isVsComputer = true;
 
+
+
+
     private final Button[][] buttons = new Button[3][3];
 
     @Override
