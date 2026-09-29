@@ -21,6 +21,8 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.SVGPath;
 import javafx.util.Duration;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
 public class SelectMenuController implements Initializable {
 
@@ -98,14 +100,15 @@ public class SelectMenuController implements Initializable {
 
     private void setupCards() {
         List<Game> games = Session.getGameManager().getGames();
+        System.out.println("DEBUG: setupCards() wordt uitgevoerd!"); // Kijken of de methode überhaupt start
 
-        addCardLabel(redCard, "Tic-Tac-Toe (vs Speler)");
+        addCardContent(redCard, "/img/pvp.png", "vs Speler");
         redCard.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) { Session.setVsComputer(false); openGameByName("Tic-Tac-Toe");}
         });
 
-        addCardLabel(greenCard, "Tic-Tac-Toe (vs Computer)");
+        addCardContent(greenCard, "/img/pvc.png", "vs Computer");
         greenCard.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
@@ -115,8 +118,9 @@ public class SelectMenuController implements Initializable {
 
         });
 
-        addCardLabel(blueCard, "Coming soon");
+        addCardContent(blueCard, "/img/cvc.png", "Coming soon");
     }
+
 
 
     private void addCardLabel(VBox card, String text) {
@@ -126,9 +130,52 @@ public class SelectMenuController implements Initializable {
         // wis eerst
         card.getChildren().clear();
 
+
         Label label = new Label(text);
         label.setStyle("-fx-text-fill: white; -fx-font-size: 18px; -fx-font-weight: bold;");
         card.getChildren().add(label);
+    }
+
+    private void addCardContent(VBox card, String imagePath, String text) {
+        if (card == null) {
+            return;
+        }
+        card.getChildren().clear();
+
+        card.setPadding(new javafx.geometry.Insets(20, 15, 20, 15));
+        card.setSpacing(15);
+
+        card.setAlignment(javafx.geometry.Pos.CENTER);
+        try {
+            var resourceStream = getClass().getResourceAsStream(imagePath);
+            if (resourceStream == null) {
+                System.err.println("FOUT: Bestand niet gevonden: " + imagePath);
+                return;
+            }
+
+            Image image = new Image(resourceStream);
+            if (image.isError()) {
+                System.err.println("FOUT bij decoderen van afbeelding " + imagePath + ": " + image.getException());
+                throw new Exception("Afbeelding is ongeldig of kan niet gelezen worden.");
+            }
+
+            ImageView imageView = new ImageView(image);
+            imageView.setFitWidth(210);
+            imageView.setFitHeight(210);
+            imageView.setPreserveRatio(true);
+
+            Label label = new Label(text);
+            label.setStyle("-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;");
+
+            card.getChildren().addAll(imageView, label);
+            System.out.println("SUCCES: Afbeelding succesvol getoond op scherm: " + imagePath);
+
+        } catch (Exception e) {
+            System.err.println("FOUT: " + e.getMessage());
+            Label label = new Label(text);
+            label.setStyle("-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;");
+            card.getChildren().add(label);
+        }
     }
 
 
