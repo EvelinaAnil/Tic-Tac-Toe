@@ -1,6 +1,6 @@
 @font-face {
     font-family: 'Horizon';
-    src: url('../fonts/Horizon_Outlined.otf');
+    src: url('fonts/Horizon_Outlined.otf');
 }
 
 .custom-label {

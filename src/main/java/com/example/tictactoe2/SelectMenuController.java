@@ -1,9 +1,19 @@
-package com.example.menutictactoe;
+package com.example.tictactoe2;
 
-import javafx.animation.*;
+import framework.Game;
+import java.net.URL;
+import java.util.List;
+import java.util.ResourceBundle;
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.ScaleTransition;
+import javafx.animation.Timeline;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -12,20 +22,16 @@ import javafx.scene.shape.Polygon;
 import javafx.scene.shape.SVGPath;
 import javafx.util.Duration;
 
-import java.net.URL;
-import java.util.ResourceBundle;
-
-public class menuSelectGame implements Initializable {
+public class SelectMenuController implements Initializable {
 
     @FXML private Pane headerPane;
     @FXML private HBox headerBox;
 
-    @FXML private Label select_lable;
+    @FXML private Label selectLabel;
 
     @FXML private VBox redCard;
     @FXML private VBox greenCard;
     @FXML private VBox blueCard;
-
 
     @FXML private Circle lCircle;
     @FXML private Polygon lTriangle;
@@ -35,37 +41,8 @@ public class menuSelectGame implements Initializable {
     @FXML private Circle rCircle;
     @FXML private SVGPath rCross;
 
-
-
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        // --- TEKST ("SELECT A GAME") ---
-        //!!
-
-//        String text = "SELECT A GAME";
-//        Random random = new Random();
-//
-//        titleContainer.getChildren().clear();
-//
-//        for (char c : text.toCharArray()) {
-//            Label letterLabel = new Label(String.valueOf(c));
-//            letterLabel.setFont(Font.font("Comic Sans MS", 40.0));
-//
-//            // Pick a random color from your array
-//            String randomColor = colors[random.nextInt(colors.length)];
-//            letterLabel.setStyle("-fx-text-fill: " + randomColor + ";");
-//
-//            // Optional: Handle spaces so they don't collapse weirdly
-//            if (c == ' ') {
-//                letterLabel.setMinWidth(15);
-//            }
-//
-//            titleContainer.getChildren().add(letterLabel);
-//        }
-
-        // --- BESTAANDE ANIMATIES VOOR FIGUREN ---
-
-        // Animation for right figures
         Timeline crossRotateL = new Timeline(
                 new KeyFrame(Duration.ZERO, new KeyValue(lCross.rotateProperty(), 0)),
                 new KeyFrame(Duration.seconds(7), new KeyValue(lCross.rotateProperty(), 360))
@@ -89,7 +66,6 @@ public class menuSelectGame implements Initializable {
         circlePulseL.setCycleCount(Animation.INDEFINITE);
         circlePulseL.play();
 
-        // Animation for left figures
         Timeline crossRotateR = new Timeline(
                 new KeyFrame(Duration.ZERO, new KeyValue(rCross.rotateProperty(), 0)),
                 new KeyFrame(Duration.seconds(7), new KeyValue(rCross.rotateProperty(), -360))
@@ -113,41 +89,71 @@ public class menuSelectGame implements Initializable {
         circlePulseR.setCycleCount(Animation.INDEFINITE);
         circlePulseR.play();
 
-
-
-        // Animation for Cards
         makeCardZoomable(redCard);
         makeCardZoomable(greenCard);
         makeCardZoomable(blueCard);
 
+        setupCards();
     }
 
-    private void  makeCardZoomable(VBox card){
+    private void setupCards() {
+        List<Game> games = Session.getGameManager().getGames();
+
+        addCardLabel(redCard, "Tic-Tac-Toe");
+        redCard.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                openGameByName("Tic-Tac-Toe");
+            }
+        });
+
+        addCardLabel(greenCard, "Coming soon");
+        addCardLabel(blueCard, "Coming soon");
+    }
+
+    private void addCardLabel(VBox card, String text) {
+        if (card == null) {
+            return;
+        }
+        Label label = new Label(text);
+        label.setStyle("-fx-text-fill: white; -fx-font-size: 18px; -fx-font-weight: bold;");
+        card.getChildren().add(label);
+    }
+
+    private void openGameByName(String name) {
+        List<Game> games = Session.getGameManager().getGames();
+        for (int i = 0; i < games.size(); i++) {
+            Game game = games.get(i);
+            if (game.getName().equals(name)) {
+                Navigator.goTo("/TicTacToe.fxml");
+                return;
+            }
+        }
+    }
+
+    private void makeCardZoomable(VBox card) {
         if (card == null) {
             return;
         }
 
-        //when cursor on card
-        card.setOnMouseEntered(event -> {
-            ScaleTransition scale = new ScaleTransition(Duration.millis(200), card);
-            scale.setToX(1.05); //width to 5%
-            scale.setToY(1.05); //height
-            scale.play();
+        card.setOnMouseEntered(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                ScaleTransition scale = new ScaleTransition(Duration.millis(200), card);
+                scale.setToX(1.05);
+                scale.setToY(1.05);
+                scale.play();
+            }
         });
 
-        //when cursor off card
-        card.setOnMouseExited(event -> {
-            ScaleTransition scale = new ScaleTransition(Duration.millis(200), card);
-            scale.setToX(1.0); // normale size
-            scale.setToY(1.0);
-            scale.play();
+        card.setOnMouseExited(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                ScaleTransition scale = new ScaleTransition(Duration.millis(200), card);
+                scale.setToX(1.0);
+                scale.setToY(1.0);
+                scale.play();
+            }
         });
-
-//        javaFX   ik wil doen labale dat elke letter gekleurd met 3 colors was bijvoorbeels s- yellow e-green en zo itets met "select a game"  ik will ook doen dat "select" was met s omhoog e omlaag en zo iet met "select". colors "BA5A5A" A4CE8B rgb(134, 188, 189)
-
     }
 }
-
-
-
-

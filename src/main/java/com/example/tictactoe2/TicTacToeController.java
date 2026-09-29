@@ -92,7 +92,7 @@ public class TicTacToeController implements Initializable {
 
     @FXML
     private void onBack() {
-        Navigator.goTo("/GameSelect.fxml");
+        Navigator.goTo("/SelectMenu.fxml");
     }
 
     private void resetGame() {
