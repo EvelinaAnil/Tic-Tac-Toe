@@ -4,9 +4,12 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 
-// Handles switching between screens.
-// All screens share one Scene. To show another screen we load its FXML
-// file and put it inside the same Scene.
+/**
+ * Handles switching between screens.
+ * All screens share one Scene. To show another screen we load its FXML
+ * file and put it inside the same Scene.
+ */
+
 public class Navigator {
 
     private static Scene scene;

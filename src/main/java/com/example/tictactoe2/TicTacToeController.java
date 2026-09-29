@@ -34,6 +34,11 @@ public class TicTacToeController implements Initializable {
     private Computer computer;
     private  boolean isVsComputer = true;
 
+    /**
+     * JavaFX view over the ported {@link Board} logic. This is the JavaFX
+     * equivalent of the old Swing GameScreen: it renders a 3x3 grid of buttons
+     * and delegates all rules (placing marks, win/draw detection) to Board.
+     */
 
 
 

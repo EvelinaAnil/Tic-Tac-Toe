@@ -24,6 +24,13 @@ import javafx.util.Duration;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
+/**
+ * Controls the main menu screen where users can select game modes and difficulty levels.
+ *
+ * <p>Handles dynamic card content, animations, and transitions to launch
+ * specific games via the framework session context.</p>
+ */
+
 public class SelectMenuController implements Initializable {
 
     @FXML private Pane headerPane;

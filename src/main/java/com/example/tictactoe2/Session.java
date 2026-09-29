@@ -7,6 +7,11 @@ import framework.User;
 // We use simple static fields so every screen can read the same values.
 public class Session {
 
+    /**
+     * Remembers who is logged in and holds the list of games.
+     * We use simple static fields so every screen can read the same values.
+     */
+
     private static User user;
     private static GameManager gameManager = new GameManager();
 

@@ -2,6 +2,13 @@ package games.tictactoe;
 
 import java.util.Random;
 
+/**
+ * Controls the AI opponent behavior for Tic-Tac-Toe.
+ *
+ * <p>Supports multiple difficulty levels ranging from a random move generator
+ * (Easy) to a strategic heuristic approach (Medium) and the unbeatable Minimax algorithm (Hard).</p>
+ */
+
 public class Computer {
     private final Random random = new Random();
     private String difficulty = "MEDIUM";
