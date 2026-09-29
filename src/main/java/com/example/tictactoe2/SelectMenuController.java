@@ -99,26 +99,38 @@ public class SelectMenuController implements Initializable {
     private void setupCards() {
         List<Game> games = Session.getGameManager().getGames();
 
-        addCardLabel(redCard, "Tic-Tac-Toe");
+        addCardLabel(redCard, "Tic-Tac-Toe (vs Speler)");
         redCard.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
-            public void handle(MouseEvent event) {
-                openGameByName("Tic-Tac-Toe");
-            }
+            public void handle(MouseEvent event) { Session.setVsComputer(false); openGameByName("Tic-Tac-Toe");}
         });
 
-        addCardLabel(greenCard, "Coming soon");
+        addCardLabel(greenCard, "Tic-Tac-Toe (vs Computer)");
+        greenCard.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                Session.setVsComputer(true);
+                showDifficultyMenu();
+            }
+
+        });
+
         addCardLabel(blueCard, "Coming soon");
     }
+
 
     private void addCardLabel(VBox card, String text) {
         if (card == null) {
             return;
         }
+        // wis eerst
+        card.getChildren().clear();
+
         Label label = new Label(text);
         label.setStyle("-fx-text-fill: white; -fx-font-size: 18px; -fx-font-weight: bold;");
         card.getChildren().add(label);
     }
+
 
     private void openGameByName(String name) {
         List<Game> games = Session.getGameManager().getGames();
@@ -130,6 +142,40 @@ public class SelectMenuController implements Initializable {
             }
         }
     }
+
+    private void showDifficultyMenu() {
+        // Rood wordt: Easy
+        addCardLabel(redCard, "Easy");
+        redCard.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                Session.setDifficulty("EASY"); // Sla op in Session
+                openGameByName("Tic-Tac-Toe");
+            }
+        });
+
+        // Groen wordt: Medium
+        addCardLabel(greenCard, "Medium");
+        greenCard.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                Session.setDifficulty("MEDIUM"); // Sla op in Session
+                openGameByName("Tic-Tac-Toe");
+            }
+        });
+
+        // Blauw (of een extra optie) wordt: Hard
+        addCardLabel(blueCard, "Hard");
+        blueCard.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                Session.setDifficulty("HARD"); // Sla op in Session
+                openGameByName("Tic-Tac-Toe");
+            }
+        });
+    }
+
+
 
     private void makeCardZoomable(VBox card) {
         if (card == null) {

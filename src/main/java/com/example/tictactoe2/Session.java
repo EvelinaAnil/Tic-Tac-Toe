@@ -10,6 +10,9 @@ public class Session {
     private static User user;
     private static GameManager gameManager = new GameManager();
 
+    private static boolean vsComputer = true;
+    private static String difficulty = "MEDIUM";
+
     public static User getUser() {
         return user;
     }
@@ -21,4 +24,21 @@ public class Session {
     public static GameManager getGameManager() {
         return gameManager;
     }
+
+    public static boolean isVsComputer(){
+        return vsComputer;
+    }
+
+    public static void setVsComputer(boolean vsComp){
+        vsComputer = vsComp;
+    }
+
+    public static String getDifficulty() {
+        return difficulty;
+    }
+
+    public static void setDifficulty(String diff) {
+        difficulty = diff;
+    }
+
 }

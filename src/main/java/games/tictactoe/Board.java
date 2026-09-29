@@ -116,4 +116,17 @@ public class Board {
         }
         return true;
     }
+
+    public boolean isCellEmpty(int row, int col) {
+        if (row < 0 || row > 2 || col < 0 || col > 2) {
+            return false;
+        }
+        return cells[row][col] == ' ';
+    }
+
+    public void clearCell(int row, int col) {
+        if (row >= 0 && row < 3 && col >= 0 && col < 3) {
+            cells[row][col] = ' ';
+        }
+    }
 }

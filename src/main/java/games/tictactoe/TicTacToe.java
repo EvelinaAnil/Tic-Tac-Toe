@@ -5,7 +5,5 @@ import framework.Game;
 public class TicTacToe extends Game {
 
     @Override
-    public String getName() {
-        return "Tic-Tac-Toe";
-    }
+    public String getName() { return "Tic-Tac-Toe"; }
 }

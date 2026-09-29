@@ -1,6 +1,7 @@
 package com.example.tictactoe2;
 
 import games.tictactoe.Board;
+import games.tictactoe.Computer;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -29,10 +30,22 @@ public class TicTacToeController implements Initializable {
     private char currentPlayer;
     private boolean gameOver;
 
+    // declaratie van de computer
+    private Computer computer;
+    private  boolean isVsComputer = true;
+
     private final Button[][] buttons = new Button[3][3];
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        computer = new Computer();
+
+        // instellingen op uit de Session
+        isVsComputer = Session.isVsComputer();
+        if (isVsComputer) {
+            computer.setDifficulty(Session.getDifficulty());
+        }
+
         for (int row = 0; row < 3; row++) {
             for (int col = 0; col < 3; col++) {
                 final int r = row;
@@ -60,6 +73,11 @@ public class TicTacToeController implements Initializable {
         if (gameOver) {
             return;
         }
+
+        if (isVsComputer && currentPlayer == 'O'){
+            return;
+        }
+
         if (!board.placeMark(row, col, currentPlayer)) {
             return;
         }
@@ -83,6 +101,39 @@ public class TicTacToeController implements Initializable {
             currentPlayer = 'X';
         }
         lblStatus.setText("Player " + currentPlayer + "'s turn");
+
+        if (isVsComputer && !gameOver && currentPlayer == 'O') {
+            makeComputerMove();
+        }
+    }
+
+    private void makeComputerMove(){
+        int[] move = computer.getBestMove(board, currentPlayer, 'X');
+        int row = move[0];
+        int col = move[1];
+
+        // voer de zet uit voor de computer
+        if (!board.placeMark(row, col, currentPlayer)) {
+            return;
+        }
+
+        buttons[row][col].setText(String.valueOf(currentPlayer));
+
+        if (board.hasWinner(currentPlayer)) {
+            lblStatus.setText("Player " + currentPlayer + " wins!");
+            gameOver = true;
+            return;
+        }
+        if (board.isFull()) {
+            lblStatus.setText("It's a draw!");
+            gameOver = true;
+            return;
+        }
+
+        // terug naar speler X
+        currentPlayer = 'X';
+        lblStatus.setText("Player " + currentPlayer + "'s turn");
+
     }
 
     @FXML
