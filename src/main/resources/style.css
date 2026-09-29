@@ -3,6 +3,11 @@
     -fx-text-background-color: black;
 }
 
+@font-face {
+    font-family: 'Agency FB';
+    src: url('./fonts/AGENCYB.ttf');
+}
+
 .button {
     -fx-background-color: #A4CE8B;
     -fx-border-radius: 20 20 20 20;

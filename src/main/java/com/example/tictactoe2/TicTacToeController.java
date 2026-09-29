@@ -8,6 +8,11 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.Polygon;
+import javafx.scene.shape.SVGPath;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -25,6 +30,9 @@ public class TicTacToeController implements Initializable {
     @FXML
     private Label lblStatus;
 
+    @FXML
+    private Pane bgShapesPane;
+
     private Board board;
     private char currentPlayer;
     private boolean gameOver;
@@ -33,6 +41,8 @@ public class TicTacToeController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        BackgroundShapes.createBackgroundShapes(bgShapesPane);
+
         for (int row = 0; row < 3; row++) {
             for (int col = 0; col < 3; col++) {
                 final int r = row;
@@ -69,6 +79,7 @@ public class TicTacToeController implements Initializable {
         if (board.hasWinner(currentPlayer)) {
             lblStatus.setText("Player " + currentPlayer + " wins!");
             gameOver = true;
+            highlightWinningCombination();
             return;
         }
         if (board.isFull()) {
@@ -83,6 +94,59 @@ public class TicTacToeController implements Initializable {
             currentPlayer = 'X';
         }
         lblStatus.setText("Player " + currentPlayer + "'s turn");
+    }
+
+    private void highlightWinningCombination() {
+        String mark = String.valueOf(currentPlayer);
+        String highlightStyle = "-fx-background-color: #ba5a5a; -fx-text-fill: black; -fx-font-weight: bold;";
+
+        //Rows
+        for (int r = 0; r < 3; r++) {
+            if (buttons[r][0].getText().equals(mark) &&
+                    buttons[r][1].getText().equals(mark) &&
+                    buttons[r][2].getText().equals(mark)) {
+
+                buttons[r][0].setStyle(highlightStyle);
+                buttons[r][1].setStyle(highlightStyle);
+                buttons[r][2].setStyle(highlightStyle);
+                return;
+            }
+        }
+
+        //Columns
+        for (int c = 0; c < 3; c++) {
+            if (buttons[0][c].getText().equals(mark) &&
+                    buttons[1][c].getText().equals(mark) &&
+                    buttons[2][c].getText().equals(mark)) {
+
+                buttons[0][c].setStyle(highlightStyle);
+                buttons[1][c].setStyle(highlightStyle);
+                buttons[2][c].setStyle(highlightStyle);
+                return;
+            }
+        }
+
+        //Bottom-Right Diagonal
+        if (buttons[0][0].getText().equals(mark) &&
+                buttons[1][1].getText().equals(mark) &&
+                buttons[2][2].getText().equals(mark)) {
+
+            buttons[0][0].setStyle(highlightStyle);
+            buttons[1][1].setStyle(highlightStyle);
+            buttons[2][2].setStyle(highlightStyle);
+            return;
+        }
+
+        //Bottom-Left Diagonal
+        if (buttons[0][2].getText().equals(mark) &&
+                buttons[1][1].getText().equals(mark) &&
+                buttons[2][0].getText().equals(mark)) {
+
+            buttons[0][2].setStyle(highlightStyle);
+            buttons[1][1].setStyle(highlightStyle);
+            buttons[2][0].setStyle(highlightStyle);
+            return;
+        }
     }
 
     @FXML
@@ -102,6 +166,7 @@ public class TicTacToeController implements Initializable {
         for (int row = 0; row < 3; row++) {
             for (int col = 0; col < 3; col++) {
                 buttons[row][col].setText(" ");
+                buttons[row][col].setStyle(""); //clears highlight
             }
         }
         lblStatus.setText("Player X's turn");
