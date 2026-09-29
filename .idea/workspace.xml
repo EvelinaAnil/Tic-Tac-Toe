@@ -4,19 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0aa677c2-6e90-4f7c-bb6b-e1efecd5a55b" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/tictactoe2/BackgroundShapes.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/fonts/AGENCYB.TTF" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/fonts/AGENCYR.TTF" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/game.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/tictactoe2/MainController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/tictactoe2/MainController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/tictactoe2/TicTacToeController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/tictactoe2/TicTacToeController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/games/tictactoe/Board.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/games/tictactoe/Board.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/TicTacToe.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/TicTacToe.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/style.css" afterDir="false" />
-    </list>
+    <list default="true" id="0aa677c2-6e90-4f7c-bb6b-e1efecd5a55b" name="Changes" comment="Style fix for game + BackgroundShapes are rotating now" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -54,61 +42,61 @@
   </component>
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="1.0000000000932567" />
-      <entry key="MS500" value="1.009861344000876" />
-      <entry key="S2" value="1.315125847971479" />
-      <entry key="S5" value="1.630171542374331" />
-      <entry key="S10" value="1.806265246357501" />
-      <entry key="S30" value="2.412836668879979" />
-      <entry key="S60" value="3.408003094393947" />
-      <entry key="M2" value="4.6308240721547085" />
-      <entry key="M5" value="6.772349650758781" />
-      <entry key="M10" value="10.890269300099726" />
-      <entry key="M15" value="16.100190585188308" />
-      <entry key="M30" value="33.624909663366594" />
-      <entry key="H1" value="60.44575518168088" />
-      <entry key="H2" value="86.86239051729528" />
-      <entry key="H4" value="106.0329132464252" />
-      <entry key="D1" value="126.35928654815352" />
-      <entry key="W1" value="130.3241300347111" />
+      <entry key="MS100" value="1.5100036847449867" />
+      <entry key="MS500" value="2.7949968012371365" />
+      <entry key="S2" value="4.5817470612809394" />
+      <entry key="S5" value="5.347090276245303" />
+      <entry key="S10" value="5.65729843584291" />
+      <entry key="S30" value="6.166068795274252" />
+      <entry key="S60" value="7.936791716833121" />
+      <entry key="M2" value="11.558168335276145" />
+      <entry key="M5" value="17.81307904947523" />
+      <entry key="M10" value="23.941847530452637" />
+      <entry key="M15" value="29.62581305004046" />
+      <entry key="M30" value="47.340561512180344" />
+      <entry key="H1" value="74.93283389296215" />
+      <entry key="H2" value="102.91872257600514" />
+      <entry key="H4" value="123.62578765946834" />
+      <entry key="D1" value="145.88062417588435" />
+      <entry key="W1" value="150.2535824873443" />
     </decayedCancelled>
     <decayedSelected>
-      <entry key="MS100" value="3.5390526695616596E-287" />
-      <entry key="MS500" value="5.125985875979147E-58" />
-      <entry key="S2" value="4.7582181751474055E-15" />
-      <entry key="S5" value="1.8666588747842114E-6" />
-      <entry key="S10" value="0.0013854808910460144" />
-      <entry key="S30" value="0.13781098508830839" />
-      <entry key="S60" value="0.4970416838680105" />
-      <entry key="M2" value="0.9991094570487599" />
-      <entry key="M5" value="2.0065367583449865" />
-      <entry key="M10" value="3.4709504031089087" />
-      <entry key="M15" value="4.754443813386339" />
-      <entry key="M30" value="7.97420906567389" />
-      <entry key="H1" value="11.86007251483431" />
-      <entry key="H2" value="15.14724697192117" />
-      <entry key="H4" value="17.332210434445603" />
-      <entry key="D1" value="19.517000968273138" />
-      <entry key="W1" value="19.92998963098399" />
+      <entry key="MS100" value="0.0" />
+      <entry key="MS500" value="1.6436252441067167E-99" />
+      <entry key="S2" value="2.0134956733448948E-25" />
+      <entry key="S5" value="1.323062256368606E-10" />
+      <entry key="S10" value="1.1502444333164178E-5" />
+      <entry key="S30" value="0.022577208731588343" />
+      <entry key="S60" value="0.15286213377500527" />
+      <entry key="M2" value="0.4601203623063517" />
+      <entry key="M5" value="1.3871507353851318" />
+      <entry key="M10" value="2.881336156851725" />
+      <entry key="M15" value="4.232502225045722" />
+      <entry key="M30" value="7.633586689691009" />
+      <entry key="H1" value="11.835981375758575" />
+      <entry key="H2" value="15.483608729893675" />
+      <entry key="H4" value="17.949574598628793" />
+      <entry key="D1" value="20.444708317514404" />
+      <entry key="W1" value="20.919431270630177" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="0.9526379980445715" />
-      <entry key="MS500" value="0.993977440908427" />
-      <entry key="S2" value="1.2431118241559005" />
-      <entry key="S5" value="1.5693473048589675" />
-      <entry key="S10" value="1.7676111444586553" />
-      <entry key="S30" value="2.507829212111612" />
-      <entry key="S60" value="3.848275879176071" />
-      <entry key="M2" value="5.577502525427738" />
-      <entry key="M5" value="8.744368430443593" />
-      <entry key="M10" value="14.33643390164257" />
-      <entry key="M15" value="20.833107402292516" />
-      <entry key="M30" value="41.580518655634066" />
-      <entry key="H1" value="72.29075648128443" />
-      <entry key="H2" value="101.99934038939267" />
-      <entry key="H4" value="123.35899122977077" />
-      <entry key="D1" value="145.87509375365542" />
-      <entry key="W1" value="150.25394437657008" />
+      <entry key="MS100" value="1.4515320125286" />
+      <entry key="MS500" value="2.7177349102407917" />
+      <entry key="S2" value="4.549899482382489" />
+      <entry key="S5" value="5.332717119573762" />
+      <entry key="S10" value="5.649809236592888" />
+      <entry key="S30" value="6.184201302014819" />
+      <entry key="S60" value="8.081666252149285" />
+      <entry key="M2" value="12.005472299696121" />
+      <entry key="M5" value="19.181924902789746" />
+      <entry key="M10" value="26.804775721724674" />
+      <entry key="M15" value="33.8404886878436" />
+      <entry key="M30" value="54.95712079166725" />
+      <entry key="H1" value="86.75427782466723" />
+      <entry key="H2" value="118.39210494509899" />
+      <entry key="H4" value="141.5691760879944" />
+      <entry key="D1" value="166.32411181664213" />
+      <entry key="W1" value="171.17283409004276" />
     </decayedShown>
   </component>
   <component name="ProjectColorInfo"><![CDATA[{
@@ -183,5 +171,9 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Style fix for game + BackgroundShapes are rotating now" />
+    <option name="LAST_COMMIT_MESSAGE" value="Style fix for game + BackgroundShapes are rotating now" />
   </component>
 </project>

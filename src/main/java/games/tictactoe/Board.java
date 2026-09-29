@@ -106,12 +106,6 @@ public class Board {
         return false;
     }
 
-    //row/column highlighting
-    private void checkAndHighlight(char mark) {
-        String markStr = String.valueOf(mark);
-        String highLight = "-fx-background-color: #2ECC71; -fx-text-fill: white; -fx-font-weight: bold;";
-
-    }
     public boolean isFull() {
         for (int row = 0; row < 3; row++) {
             for (int col = 0; col < 3; col++) {
