@@ -18,6 +18,7 @@ public class MainApplication extends Application {
             Scene scene = new Scene(root, 1000, 500);
             scene.getStylesheets().add(getClass().getResource("/style.css").toExternalForm());
             Font.loadFont(getClass().getResource("/fonts/Horizon.otf").toExternalForm(), 10);
+            Navigator.setScene(scene);
             primaryStage.setScene(scene);
             primaryStage.show();
         } catch (Exception e) {

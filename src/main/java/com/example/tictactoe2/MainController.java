@@ -28,6 +28,9 @@ import javafx.util.Duration;
 
 import javafx.animation.AnimationTimer;
 
+import framework.User;
+import framework.UserManager;
+
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -198,11 +201,18 @@ public class MainController implements Initializable {
     }*/
 
     //login logic
+    private final UserManager userManager = new UserManager();
+
     public void Login(ActionEvent event) {
-        if (txtUsername.getText().equals("user")){
-            lblStatus.setText("Welcome");
-        } else  {
-            lblStatus.setText("No user exists with that username");
+        String username = txtUsername.getText().trim();
+        if (username.isEmpty()) {
+            lblStatus.setText("Please enter a username");
+            return;
         }
+
+        User user = userManager.login(username);
+        Session.get().setUser(user);
+        lblStatus.setText("Welcome " + user.getUsername());
+        Navigator.goTo("/MainMenu.fxml");
     }
 }
