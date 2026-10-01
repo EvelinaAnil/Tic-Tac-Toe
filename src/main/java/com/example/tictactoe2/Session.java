@@ -16,6 +16,7 @@ public class Session {
     private static GameManager gameManager = new GameManager();
 
     private static boolean vsComputer = true;
+    private static boolean isCvC = false; // EXTRA: CvC modus vlag
     private static String difficulty = "MEDIUM";
 
     public static User getUser() {
@@ -36,6 +37,14 @@ public class Session {
 
     public static void setVsComputer(boolean vsComp){
         vsComputer = vsComp;
+    }
+
+    public static boolean isCvC() {
+        return isCvC;
+    }
+
+    public static void setCvC(boolean cvc) {
+        isCvC = cvc;
     }
 
     public static String getDifficulty() {

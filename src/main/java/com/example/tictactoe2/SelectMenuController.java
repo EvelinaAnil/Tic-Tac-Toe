@@ -125,7 +125,15 @@ public class SelectMenuController implements Initializable {
 
         });
 
-        addCardContent(blueCard, "/img/cvc.png", "Coming soon");
+        addCardContent(blueCard, "/img/cvc.png", "Computer vs Computer");
+        blueCard.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                Session.setVsComputer(true);
+                Session.setCvC(true);
+                showDifficultyMenu();
+            }
+        });
     }
 
 
