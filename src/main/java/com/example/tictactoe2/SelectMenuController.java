@@ -23,6 +23,8 @@ import javafx.scene.shape.SVGPath;
 import javafx.util.Duration;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import framework.network.ServerConnection;
+import java.io.IOException;
 
 /**
  * Controls the main menu screen where users can select game modes and difficulty levels.
@@ -199,6 +201,25 @@ public class SelectMenuController implements Initializable {
         for (int i = 0; i < games.size(); i++) {
             Game game = games.get(i);
             if (game.getName().equals(name)) {
+
+                // PAS HIER AAN: Alleen verbinding maken als de online modus gekozen is
+                if (Session.isOnline()) {
+                    if (Session.getServerConnection() == null) {
+                        String username = (Session.getUser() != null)
+                                ? Session.getUser().getUsername()
+                                : "Player_" + (System.currentTimeMillis() % 1000);
+                        try {
+                            ServerConnection connection = new ServerConnection("localhost", 7789, username);
+                            connection.connect();
+                            Session.setServerConnection(connection);
+                        } catch (IOException e) {
+                            System.err.println("Kon niet verbinden met server op 7789: " + e.getMessage());
+                            return;
+                        }
+                    }
+                    Session.getServerConnection().subscribe("Tic-tac-toe");
+                }
+
                 Navigator.goTo("/TicTacToe.fxml");
                 return;
             }
