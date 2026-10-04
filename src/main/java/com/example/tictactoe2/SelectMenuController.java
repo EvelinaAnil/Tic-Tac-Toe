@@ -3,6 +3,7 @@ package com.example.tictactoe2;
 import framework.Game;
 import java.net.URL;
 import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
@@ -13,6 +14,9 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonBar;
+import javafx.scene.control.ButtonType;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -114,7 +118,33 @@ public class SelectMenuController implements Initializable {
         addCardContent(redCard, "/img/pvp.png", "vs Speler");
         redCard.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
-            public void handle(MouseEvent event) { Session.setVsComputer(false); openGameByName("Tic-Tac-Toe");}
+            public void handle(MouseEvent event) {
+                Alert dialog = new Alert(Alert.AlertType.CONFIRMATION);
+                dialog.setTitle("Kies Speltype");
+                dialog.setHeaderText("Speler vs Speler");
+                dialog.setContentText("Kies hoe je wilt spelen:");
+
+                ButtonType btnLocal = new ButtonType("Lokaal");
+                ButtonType btnOnline = new ButtonType("Online");
+                ButtonType btnCancel = new ButtonType("Annuleren", ButtonBar.ButtonData.CANCEL_CLOSE);
+
+                dialog.getButtonTypes().setAll(btnLocal, btnOnline, btnCancel);
+
+                Optional<ButtonType> result = dialog.showAndWait();
+                if (result.isPresent()) {
+                    if (result.get() == btnLocal) {
+                        Session.setOnline(false);
+                        Session.setVsComputer(false);
+                        Session.setCvC(false);
+                        openGameByName("Tic-Tac-Toe");
+                    } else if (result.get() == btnOnline) {
+                        Session.setOnline(true);
+                        Session.setVsComputer(false);
+                        Session.setCvC(false);
+                        openGameByName("Tic-Tac-Toe");
+                    }
+                }
+            }
         });
 
         addCardContent(greenCard, "/img/pvc.png", "vs Computer");

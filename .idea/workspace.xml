@@ -4,18 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0aa677c2-6e90-4f7c-bb6b-e1efecd5a55b" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Server/README.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Server/newgameserver-release-V1.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/framework/network/ProtocolParser.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/framework/network/ServerConnection.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/framework/network/ServerListener.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+    <list default="true" id="0aa677c2-6e90-4f7c-bb6b-e1efecd5a55b" name="Changes" comment="Functie toegevoegd waarmee een connectie gemaakt kan worden met de server voor een online modus">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/tictactoe2/SelectMenuController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/tictactoe2/SelectMenuController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/tictactoe2/Session.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/tictactoe2/Session.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/tictactoe2/TicTacToeController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/tictactoe2/TicTacToeController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/module-info.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/module-info.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -182,5 +173,9 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Functie toegevoegd waarmee een connectie gemaakt kan worden met de server voor een online modus" />
+    <option name="LAST_COMMIT_MESSAGE" value="Functie toegevoegd waarmee een connectie gemaakt kan worden met de server voor een online modus" />
   </component>
 </project>
