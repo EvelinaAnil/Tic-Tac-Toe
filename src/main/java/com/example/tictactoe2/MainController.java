@@ -9,24 +9,15 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Point2D;
-import javafx.scene.Group;
-import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.effect.Glow;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Arc;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Shape;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
-
-import javafx.animation.AnimationTimer;
 
 import framework.User;
 import framework.UserManager;
@@ -54,7 +45,7 @@ public class MainController implements Initializable {
         Point2D center2 = new Point2D(160, 50);
         String text = "ISY GAMES";
         drawText(text, 32, center, center2);
-        createBackgroundShapes(bgShapesPane);
+        BackgroundShapes.createBackgroundShapes(bgShapesPane);
         //animateShapes(bgShapesPane);
     }
 
@@ -122,83 +113,6 @@ public class MainController implements Initializable {
         arc.setRadiusY(radius);
         return arc;
     }
-
-    //background shapes
-    private Shape createCross(double size, double thickness) {
-        Polygon cross = new Polygon();
-        double s = size / 2, t = thickness / 2;
-        cross.getPoints().addAll(new Double[]{
-                -t, -s,  t, -s,  t, -t,
-                s, -t,  s,  t,  t,  t,
-                t,  s, -t,  s, -t,  t,
-                -s,  t, -s, -t, -t, -t
-        });
-        return cross;
-    }
-
-    private void createBackgroundShapes(Pane pane) {
-        addShape(pane, new Polygon(0.0,-28.0, 24.0,20.0, -24.0,20.0), Color.web("#86bcbd"), 30, 30);
-
-        addShape(pane, new Circle(28), Color.web("#a4ce8b"), 170, 40);
-
-        addShape(pane, new Polygon(0.0,-28.0, 24.0,20.0, -24.0,20.0), Color.web("#ba5a5a"), 330, 32);
-
-        addShape(pane, new Circle(28), Color.web("#86bcbd"), 600, 38);
-
-        addShape(pane, createCross(48, 16), Color.web("#a4ce8b"), 900, 40);
-
-        addShape(pane, new Polygon(0.0,-28.0, 24.0,20.0, -24.0,20.0), Color.web("#ba5a5a"), 200, 300);
-
-        addShape(pane, createCross(48, 16), Color.web("#a4ce8b"), 200, 200);
-
-        addShape(pane, new Circle(28), Color.web("#86bcbd"), 60, 150);
-
-        addShape(pane, new Polygon(0.0,-28.0, 24.0,20.0, -24.0,20.0), Color.web("#a4ce8b"), 700, 100);
-
-        addShape(pane, new Circle(28), Color.web("#ba5a5a"), 900, 300);
-
-        addShape(pane, new Polygon(0.0,-28.0, 24.0,20.0, -24.0,20.0), Color.web("#86bcbd"), 800, 205);
-
-        addShape(pane, createCross(48, 16), Color.web("#ba5a5a"), 700, 400);
-
-    }
-
-    private void addShape(Pane pane, Shape shape, Color color, double x, double y) {
-        shape.setFill(color);
-        shape.setLayoutX(x);
-        shape.setLayoutY(y);
-        pane.getChildren().add(shape);
-    }
-    //TODO: animatie -nice to have?-
-    /*
-    private void animateShapes(Pane pane) {
-        AnimationTimer timer = new AnimationTimer() {
-            @Override
-            public void handle(long now) {
-                for (int i = 0; i < floatingShapes.size(); i++) {
-                    Shape shape = floatingShapes.get(i);
-                    double[] vel = velocities.get(i);
-
-                    double newX = shape.getLayoutX() + vel[0];
-                    double newY = shape.getLayoutY() + vel[1];
-
-                    if (newX < 0 || newX > pane.getWidth()) {
-                        vel[0] *= -1;
-                        newX = shape.getLayoutX() + vel[0];
-                    }
-
-                    if (newY < 0 || newY > pane.getHeight()) {
-                        vel[1] *= -1;
-                        newY = shape.getLayoutY() + vel[1];
-                    }
-
-                    shape.setLayoutX(newX);
-                    shape.setLayoutY(newY);
-                }
-            }
-        };
-        timer.start();
-    }*/
 
     //login logic
     private final UserManager userManager = new UserManager();
