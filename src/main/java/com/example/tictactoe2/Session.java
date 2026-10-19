@@ -74,4 +74,14 @@ public class Session {
     public static void setOnline(boolean online) {
         isOnline = online;
     }
+
+    private static boolean loadSavedGame = false;
+
+    public static boolean isLoadSavedGame() {
+        return loadSavedGame;
+    }
+
+    public static void setLoadSavedGame(boolean load) {
+        loadSavedGame = load;
+    }
 }

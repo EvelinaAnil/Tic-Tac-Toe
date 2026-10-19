@@ -1,5 +1,6 @@
 package com.example.tictactoe2;
 
+import framework.GameSave;
 import framework.network.ServerConnection;
 import framework.network.ServerListener;
 import games.tictactoe.Board;
@@ -10,13 +11,16 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.util.Duration;
 
 import java.net.URL;
 import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 /**
@@ -106,7 +110,61 @@ public class TicTacToeController implements Initializable, ServerListener {
             computerO.setDifficulty(Session.getDifficulty());
         }
 
+        if (Session.isLoadSavedGame()) {
+            Session.setLoadSavedGame(false);
+            if (loadSavedGame()) {
+                return;
+            }
+        }
+
         resetGame();
+    }
+
+    private boolean loadSavedGame() {
+        GameSave save = GameSave.load(getUserName());
+        if (save == null || save.boardState == null || save.boardState.length() != 9) {
+            return false;
+        }
+
+        stopCvc();
+        board = new Board();
+        gameOver = false;
+
+        for (int row = 0; row < 3; row++) {
+            for (int col = 0; col < 3; col++) {
+                char mark = save.boardState.charAt(row * 3 + col);
+                board.setCell(row, col, mark);
+                buttons[row][col].setText(mark == ' ' ? " " : String.valueOf(mark));
+            }
+        }
+
+        currentPlayer = save.currentPlayer;
+        GameSave.delete(getUserName());
+
+        lblStatus.setText((isCvcMode ? "Computer " : "Player ") + currentPlayer + "'s turn");
+
+        if (isCvcMode) {
+            scheduleCvcTurn(500);
+        } else if (isVsComputer && currentPlayer == 'O') {
+            makeComputerMove();
+        }
+        return true;
+    }
+
+    private void saveGame() {
+        GameSave save = new GameSave();
+        StringBuilder state = new StringBuilder();
+        for (int row = 0; row < 3; row++) {
+            for (int col = 0; col < 3; col++) {
+                state.append(board.getCell(row, col));
+            }
+        }
+        save.boardState = state.toString();
+        save.currentPlayer = currentPlayer;
+        save.vsComputer = isVsComputer;
+        save.cvc = isCvcMode;
+        save.difficulty = Session.getDifficulty();
+        GameSave.save(getUserName(), save);
     }
 
     private void initOnline() {
@@ -282,6 +340,21 @@ public class TicTacToeController implements Initializable, ServerListener {
             }
         } else {
             stopCvc();
+            if (!gameOver && !isCvcMode && isGameStarted()) {
+                Alert dialog = new Alert(Alert.AlertType.CONFIRMATION);
+                dialog.setTitle("Spel opslaan");
+                dialog.setHeaderText(null);
+                dialog.setContentText("Wil je het spel opslaan?");
+
+                ButtonType btnYes = new ButtonType("Ja");
+                ButtonType btnNo = new ButtonType("Nee");
+                dialog.getButtonTypes().setAll(btnYes, btnNo);
+
+                Optional<ButtonType> result = dialog.showAndWait();
+                if (result.isPresent() && result.get() == btnYes) {
+                    saveGame();
+                }
+            }
         }
         Navigator.goTo("/SelectMenu.fxml");
     }
@@ -300,6 +373,20 @@ public class TicTacToeController implements Initializable, ServerListener {
     private void resetBoardUI() {
         clearBoardUI();
         isMyTurn = false;
+    }
+
+    private boolean isGameStarted() {
+        if (board == null) {
+            return false;
+        }
+        for (int row = 0; row < 3; row++) {
+            for (int col = 0; col < 3; col++) {
+                if (board.getCell(row, col) != ' ') {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     private void clearBoardUI() {

@@ -59,6 +59,12 @@ public class Board {
         return cells[row][col];
     }
 
+    public void setCell(int row, int col, char mark) {
+        if (row >= 0 && row < 3 && col >= 0 && col < 3) {
+            cells[row][col] = mark;
+        }
+    }
+
     private int columnFromLetter(char letter) {
         char upper = Character.toUpperCase(letter);
         if (upper == 'A') {
