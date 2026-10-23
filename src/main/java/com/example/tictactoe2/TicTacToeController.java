@@ -1,14 +1,19 @@
 package com.example.tictactoe2;
 
+import framework.GameSave;
+import framework.network.ServerConnection;
+import framework.network.ServerListener;
 import games.tictactoe.Board;
 import games.tictactoe.Computer;
 import javafx.animation.PauseTransition;
-import javafx.animation.Timeline;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.util.Duration;
@@ -16,6 +21,8 @@ import javafx.scene.layout.Pane;
 
 
 import java.net.URL;
+import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 /**
@@ -23,7 +30,7 @@ import java.util.ResourceBundle;
  * equivalent of the old Swing GameScreen: it renders a 3x3 grid of buttons
  * and delegates all rules (placing marks, win/draw detection) to Board.
  */
-public class TicTacToeController implements Initializable {
+public class TicTacToeController implements Initializable, ServerListener {
 
     @FXML
     private GridPane grid;
@@ -44,7 +51,13 @@ public class TicTacToeController implements Initializable {
     private boolean isCvcMode = false;
     private  boolean isVsComputer = true;
 
-    private Timeline cvcTimeline; // Animatie timer voor CvC zetten
+    private PauseTransition cvcPause; // Animatie timer voor CvC zetten
+
+    private boolean isOnlineMode = false;
+    private ServerConnection serverConnection;
+    private boolean isMyTurn = false;
+    private char mySymbol = 'X';
+    private char opponentSymbol = 'O';
 
     /**
      * JavaFX view over the ported {@link Board} logic. This is the JavaFX
@@ -94,10 +107,128 @@ public class TicTacToeController implements Initializable {
                 grid.add(button, col, row);
             }
         }
+
+        serverConnection = Session.getServerConnection();
+        isOnlineMode = (serverConnection != null);
+
+        this.isOnlineMode = Session.isOnline();
+
+        if (isOnlineMode) {
+            initOnline();
+        } else {
+            initLocal();
+        }
+    }
+
+    private void initLocal() {
+        computer = new Computer();
+        computerO = new Computer();
+
+        isVsComputer = Session.isVsComputer();
+        isCvcMode = Session.isCvC();
+
+        // instellingen op uit de Session
+        if (isVsComputer) {
+            computer.setDifficulty(Session.getDifficulty());
+            computerO.setDifficulty(Session.getDifficulty());
+        }
+
+        if (Session.isLoadSavedGame()) {
+            Session.setLoadSavedGame(false);
+            if (loadSavedGame()) {
+                return;
+            }
+        }
+
         resetGame();
     }
 
+    private boolean loadSavedGame() {
+        GameSave save = GameSave.load(getUserName());
+        if (save == null || save.boardState == null || save.boardState.length() != 9) {
+            return false;
+        }
+
+        stopCvc();
+        board = new Board();
+        gameOver = false;
+
+        for (int row = 0; row < 3; row++) {
+            for (int col = 0; col < 3; col++) {
+                char mark = save.boardState.charAt(row * 3 + col);
+                board.setCell(row, col, mark);
+                buttons[row][col].setText(mark == ' ' ? " " : String.valueOf(mark));
+            }
+        }
+
+        currentPlayer = save.currentPlayer;
+        GameSave.delete(getUserName());
+
+        lblStatus.setText((isCvcMode ? "Computer " : "Player ") + currentPlayer + "'s turn");
+
+        if (isCvcMode) {
+            scheduleCvcTurn(500);
+        } else if (isVsComputer && currentPlayer == 'O') {
+            makeComputerMove();
+        }
+        return true;
+    }
+
+    private void saveGame() {
+        GameSave save = new GameSave();
+        StringBuilder state = new StringBuilder();
+        for (int row = 0; row < 3; row++) {
+            for (int col = 0; col < 3; col++) {
+                state.append(board.getCell(row, col));
+            }
+        }
+        save.boardState = state.toString();
+        save.currentPlayer = currentPlayer;
+        save.vsComputer = isVsComputer;
+        save.cvc = isCvcMode;
+        save.difficulty = Session.getDifficulty();
+        GameSave.save(getUserName(), save);
+    }
+
+    private void initOnline() {
+        resetBoardUI();
+        serverConnection = Session.getServerConnection();
+
+        if (serverConnection != null) {
+            serverConnection.setListener(this);
+            lblStatus.setText("Wachten op tegenstander...");
+        } else {
+            lblStatus.setText("Geen verbinding met de server.");
+        }
+
+        isMyTurn = false;
+    }
+
     private void handleClick(int row, int col) {
+        if (isOnlineMode) {
+            handleOnlineClick(row, col);
+        } else {
+            handleLocalClick(row, col);
+        }
+    }
+
+    private void handleOnlineClick(int row, int col) {
+        if (gameOver || !isMyTurn) {
+            return;
+        }
+
+        if (!buttons[row][col].getText().trim().isEmpty()) {
+            return;
+        }
+
+        int moveIndex = row * 3 + col;
+        isMyTurn = false;
+        lblStatus.setText("Zet versturen...");
+
+        serverConnection.sendMove(moveIndex);
+    }
+
+    private void handleLocalClick(int row, int col) {
         if (gameOver || isCvcMode) {
             return;
         }
@@ -163,7 +294,7 @@ public class TicTacToeController implements Initializable {
     }
 
     private void playCvcTurn() {
-        if (gameOver || !isCvcMode) {
+        if (gameOver || !isCvcMode || isOnlineMode) {
             return;
         }
 
@@ -198,9 +329,21 @@ public class TicTacToeController implements Initializable {
         lblStatus.setText("Computer " + currentPlayer + "'s turn");
 
         // vertraging van 600ms tussen beurten zodat je de animatie/stappen ziet
-        PauseTransition pause = new PauseTransition(Duration.millis(600));
-        pause.setOnFinished(e -> playCvcTurn());
-        pause.play();
+        scheduleCvcTurn(600);
+    }
+
+    private void scheduleCvcTurn(int millis) {
+        stopCvc();
+        cvcPause = new PauseTransition(Duration.millis(millis));
+        cvcPause.setOnFinished(e -> playCvcTurn());
+        cvcPause.play();
+    }
+
+    private void stopCvc() {
+        if (cvcPause != null) {
+            cvcPause.stop();
+            cvcPause = null;
+        }
     }
 
     private void highlightWinningCombination() {
@@ -258,17 +401,75 @@ public class TicTacToeController implements Initializable {
 
     @FXML
     private void onReset() {
-        resetGame();
+        if (isOnlineMode) {
+            if (serverConnection != null) {
+                serverConnection.subscribe("Tic-tac-toe");
+                lblStatus.setText("Zoeken naar nieuwe match...");
+            }
+        } else {
+            resetGame();
+        }
     }
 
     @FXML
     private void onBack() {
+        if (isOnlineMode) {
+            if (serverConnection != null) {
+                serverConnection.forfeit();
+            }
+        } else {
+            stopCvc();
+            if (!gameOver && !isCvcMode && isGameStarted()) {
+                Alert dialog = new Alert(Alert.AlertType.CONFIRMATION);
+                dialog.setTitle("Spel opslaan");
+                dialog.setHeaderText(null);
+                dialog.setContentText("Wil je het spel opslaan?");
+
+                ButtonType btnYes = new ButtonType("Ja");
+                ButtonType btnNo = new ButtonType("Nee");
+                dialog.getButtonTypes().setAll(btnYes, btnNo);
+
+                Optional<ButtonType> result = dialog.showAndWait();
+                if (result.isPresent() && result.get() == btnYes) {
+                    saveGame();
+                }
+            }
+        }
         Navigator.goTo("/SelectMenu.fxml");
     }
 
     private void resetGame() {
-        board = new Board();
+        stopCvc();
+        clearBoardUI();
         currentPlayer = 'X';
+        lblStatus.setText(isCvcMode ? "Computer X's turn" : "Player X's turn");
+
+        if (isCvcMode) {
+            scheduleCvcTurn(500);
+        }
+    }
+
+    private void resetBoardUI() {
+        clearBoardUI();
+        isMyTurn = false;
+    }
+
+    private boolean isGameStarted() {
+        if (board == null) {
+            return false;
+        }
+        for (int row = 0; row < 3; row++) {
+            for (int col = 0; col < 3; col++) {
+                if (board.getCell(row, col) != ' ') {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private void clearBoardUI() {
+        board = new Board();
         gameOver = false;
         for (int row = 0; row < 3; row++) {
             for (int col = 0; col < 3; col++) {
@@ -276,12 +477,91 @@ public class TicTacToeController implements Initializable {
                 buttons[row][col].setStyle(""); //clears highlight
             }
         }
-        lblStatus.setText(isCvcMode ? "Computer X's turn" : "Player X's turn");
+    }
 
-        if (isCvcMode) {
-            PauseTransition startDelay = new PauseTransition(Duration.millis(500));
-            startDelay.setOnFinished(e -> playCvcTurn());
-            startDelay.play();
+    @Override
+    public void onMatchStarted(String gameType, String opponent, boolean isStartingPlayer) {
+        Platform.runLater(() -> {
+            resetBoardUI();
+            if (isStartingPlayer) {
+                mySymbol = 'X';
+                opponentSymbol = 'O';
+                lblStatus.setText("Match tegen " + opponent + "! Jij bent X (begint)");
+            } else {
+                mySymbol = 'O';
+                opponentSymbol = 'X';
+                lblStatus.setText("Match tegen " + opponent + "! Jij bent O");
+            }
+        });
+    }
+
+    @Override
+    public void onYourTurn(String turnMessage) {
+        Platform.runLater(() -> {
+            isMyTurn = true;
+            lblStatus.setText("Jouw beurt! (" + mySymbol + ")");
+        });
+    }
+
+    @Override
+    public void onMoveReceived(String player, int move, String details) {
+        Platform.runLater(() -> {
+            int row = move / 3;
+            int col = move % 3;
+
+            boolean isSelf = (serverConnection != null && player.equalsIgnoreCase(getUserName()));
+            char symbol = isSelf ? mySymbol : opponentSymbol;
+
+            if (board != null) {
+                board.placeMark(row, col, symbol);
+            }
+            buttons[row][col].setText(String.valueOf(symbol));
+
+            if (!isSelf) {
+                lblStatus.setText(player + " heeft gezet.");
+            }
+        });
+    }
+
+    @Override
+    public void onGameOver(String result, String comment) {
+        Platform.runLater(() -> {
+            gameOver = true;
+            isMyTurn = false;
+            if ("WIN".equalsIgnoreCase(result)) {
+                lblStatus.setText("Gewonnen! " + comment);
+            } else if ("LOSS".equalsIgnoreCase(result)) {
+                lblStatus.setText("Verloren! " + comment);
+            } else {
+                lblStatus.setText("Gelijkspel! " + comment);
+            }
+        });
+    }
+
+    @Override
+    public void onError(String errorMessage) {
+        Platform.runLater(() -> lblStatus.setText("Fout: " + errorMessage));
+    }
+
+    @Override
+    public void onConnected() {}
+
+    @Override
+    public void onChallengeReceived(String challenger, String gameType, String challengeNumber) {}
+
+    @Override
+    public void onChallengeCancelled(String challengeNumber) {}
+
+    @Override
+    public void onGameListReceived(List<String> games) {}
+
+    @Override
+    public void onPlayerListReceived(List<String> players) {}
+
+    private String getUserName() {
+        if (Session.getUser() != null) {
+            return Session.getUser().getUsername();
         }
+        return "";
     }
 }

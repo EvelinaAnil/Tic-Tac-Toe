@@ -2,6 +2,7 @@ package com.example.tictactoe2;
 
 import framework.GameManager;
 import framework.User;
+import framework.network.ServerConnection;
 
 // Remembers who is logged in and holds the list of games.
 // We use simple static fields so every screen can read the same values.
@@ -14,6 +15,7 @@ public class Session {
 
     private static User user;
     private static GameManager gameManager = new GameManager();
+    private static ServerConnection serverConnection;
 
     private static boolean vsComputer = true;
     private static boolean isCvC = false; // EXTRA: CvC modus vlag
@@ -55,4 +57,31 @@ public class Session {
         difficulty = diff;
     }
 
+    public static ServerConnection getServerConnection() {
+        return serverConnection;
+    }
+
+    public static void setServerConnection(ServerConnection connection) {
+        serverConnection = connection;
+    }
+
+    private static boolean isOnline = false;
+
+    public static boolean isOnline() {
+        return isOnline;
+    }
+
+    public static void setOnline(boolean online) {
+        isOnline = online;
+    }
+
+    private static boolean loadSavedGame = false;
+
+    public static boolean isLoadSavedGame() {
+        return loadSavedGame;
+    }
+
+    public static void setLoadSavedGame(boolean load) {
+        loadSavedGame = load;
+    }
 }

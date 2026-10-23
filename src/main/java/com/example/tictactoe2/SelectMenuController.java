@@ -1,8 +1,10 @@
 package com.example.tictactoe2;
 
 import framework.Game;
+import framework.GameSave;
 import java.net.URL;
 import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
@@ -13,6 +15,9 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonBar;
+import javafx.scene.control.ButtonType;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -23,6 +28,8 @@ import javafx.scene.shape.SVGPath;
 import javafx.util.Duration;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import framework.network.ServerConnection;
+import java.io.IOException;
 
 /**
  * Controls the main menu screen where users can select game modes and difficulty levels.
@@ -37,6 +44,8 @@ public class SelectMenuController implements Initializable {
     @FXML private HBox headerBox;
 
     @FXML private Label selectLabel;
+
+    @FXML private Label savedGameLabel;
 
     @FXML private VBox redCard;
     @FXML private VBox greenCard;
@@ -103,6 +112,54 @@ public class SelectMenuController implements Initializable {
         makeCardZoomable(blueCard);
 
         setupCards();
+        setupSavedGame();
+    }
+
+    private void setupSavedGame() {
+        if (savedGameLabel == null) {
+            return;
+        }
+
+        String username = (Session.getUser() != null) ? Session.getUser().getUsername() : null;
+        GameSave save = GameSave.load(username);
+        boolean hasSave = (save != null);
+
+        savedGameLabel.setVisible(hasSave);
+        savedGameLabel.setManaged(hasSave);
+
+        if (hasSave) {
+            savedGameLabel.setText("Opgeslagen spel: " + describeSave(save));
+            savedGameLabel.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    continueSavedGame();
+                }
+            });
+        }
+    }
+
+    private String describeSave(GameSave save) {
+        if (save.vsComputer) {
+            return "vs Computer (" + save.difficulty + ")";
+        }
+        return "vs Speler";
+    }
+
+    private void continueSavedGame() {
+        String username = (Session.getUser() != null) ? Session.getUser().getUsername() : null;
+        GameSave save = GameSave.load(username);
+        if (save == null) {
+            savedGameLabel.setVisible(false);
+            savedGameLabel.setManaged(false);
+            return;
+        }
+
+        Session.setOnline(false);
+        Session.setVsComputer(save.vsComputer);
+        Session.setCvC(save.cvc);
+        Session.setDifficulty(save.difficulty);
+        Session.setLoadSavedGame(true);
+        Navigator.goTo("/TicTacToe.fxml");
     }
 
     private void setupCards() {
@@ -112,7 +169,33 @@ public class SelectMenuController implements Initializable {
         addCardContent(redCard, "/img/pvp.png", "vs Speler");
         redCard.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
-            public void handle(MouseEvent event) { Session.setVsComputer(false); openGameByName("Tic-Tac-Toe");}
+            public void handle(MouseEvent event) {
+                Alert dialog = new Alert(Alert.AlertType.CONFIRMATION);
+                dialog.setTitle("Kies Speltype");
+                dialog.setHeaderText("Speler vs Speler");
+                dialog.setContentText("Kies hoe je wilt spelen:");
+
+                ButtonType btnLocal = new ButtonType("Lokaal");
+                ButtonType btnOnline = new ButtonType("Online");
+                ButtonType btnCancel = new ButtonType("Annuleren", ButtonBar.ButtonData.CANCEL_CLOSE);
+
+                dialog.getButtonTypes().setAll(btnLocal, btnOnline, btnCancel);
+
+                Optional<ButtonType> result = dialog.showAndWait();
+                if (result.isPresent()) {
+                    if (result.get() == btnLocal) {
+                        Session.setOnline(false);
+                        Session.setVsComputer(false);
+                        Session.setCvC(false);
+                        openGameByName("Tic-Tac-Toe");
+                    } else if (result.get() == btnOnline) {
+                        Session.setOnline(true);
+                        Session.setVsComputer(false);
+                        Session.setCvC(false);
+                        openGameByName("Tic-Tac-Toe");
+                    }
+                }
+            }
         });
 
         addCardContent(greenCard, "/img/pvc.png", "vs Computer");
@@ -199,6 +282,25 @@ public class SelectMenuController implements Initializable {
         for (int i = 0; i < games.size(); i++) {
             Game game = games.get(i);
             if (game.getName().equals(name)) {
+
+                // PAS HIER AAN: Alleen verbinding maken als de online modus gekozen is
+                if (Session.isOnline()) {
+                    if (Session.getServerConnection() == null) {
+                        String username = (Session.getUser() != null)
+                                ? Session.getUser().getUsername()
+                                : "Player_" + (System.currentTimeMillis() % 1000);
+                        try {
+                            ServerConnection connection = new ServerConnection("localhost", 7789, username);
+                            connection.connect();
+                            Session.setServerConnection(connection);
+                        } catch (IOException e) {
+                            System.err.println("Kon niet verbinden met server op 7789: " + e.getMessage());
+                            return;
+                        }
+                    }
+                    Session.getServerConnection().subscribe("Tic-tac-toe");
+                }
+
                 Navigator.goTo("/TicTacToe.fxml");
                 return;
             }
