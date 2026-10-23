@@ -4,20 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0aa677c2-6e90-4f7c-bb6b-e1efecd5a55b" name="Changes" comment="Nieuw keuze menu toegevoegd bij de mode &quot;Computer vs Computer&quot; waarmee Online of Lokaal gekozen kan worden. Met de Online optie wordt een verbinding met de server gemaakt en kunnen 2 AI's tegen elkaar spelen">
-    <list default="true" id="0aa677c2-6e90-4f7c-bb6b-e1efecd5a55b" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/resources/avatar/hello.PNG" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/avatar/nr1Winner.PNG" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/avatar/whateverBro.PNG" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/tictactoe2/MainApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/tictactoe2/MainApplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/tictactoe2/MainController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/tictactoe2/MainController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/tictactoe2/TicTacToeController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/tictactoe2/TicTacToeController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/games/tictactoe/Board.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/games/tictactoe/Board.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/Login.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/Login.fxml" afterDir="false" />
-    <list default="true" id="0aa677c2-6e90-4f7c-bb6b-e1efecd5a55b" name="Changes" comment="Functie toegevoegd waarmee een connectie gemaakt kan worden met de server voor een online modus">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/Server/README.md" afterDir="false" />
+    <list default="true" id="8803c90c-b5da-4649-b37f-17d9ecd0cc74" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -25,284 +13,70 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="Git.Settings">
-    <option name="RECENT_BRANCH_BY_REPOSITORY">
-      <map>
-        <entry key="$PROJECT_DIR$" value="main" />
-      </map>
-    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="GitHubPullRequestSearchHistory">{
-  &quot;lastFilter&quot;: {
-    &quot;state&quot;: &quot;OPEN&quot;,
-    &quot;assignee&quot;: &quot;max-1232&quot;
+  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+  "lastFilter": {
+    "state": "OPEN",
+    "assignee": "max-1232"
   }
-}</component>
-  <component name="GithubPullRequestsUISettings">{
-  &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;https://github.com/EvelinaAnil/Tic-Tac-Toe.git&quot;,
-    &quot;accountId&quot;: &quot;c6db12ec-35e4-4a78-9ee5-fcee936941b9&quot;
+}]]></component>
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/EvelinaAnil/Tic-Tac-Toe.git",
+    "accountId": "c6db12ec-35e4-4a78-9ee5-fcee936941b9"
   }
-}</component>
-  <component name="GitHubPullRequestSearchHistory">{
-  &quot;lastFilter&quot;: {
-    &quot;state&quot;: &quot;OPEN&quot;,
-    &quot;assignee&quot;: &quot;Nyina16&quot;
-  }
-}</component>
-  <component name="GithubPullRequestsUISettings">{
-  &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;https://github.com/EvelinaAnil/Tic-Tac-Toe.git&quot;,
-    &quot;accountId&quot;: &quot;e7324295-73ce-4d8a-818c-e25436f1c90d&quot;
-  }
-}</component>
-  <component name="MavenImportPreferences">
-    <option name="generalSettings">
-      <MavenGeneralSettings>
-        <option name="mavenHomeTypeForPersistence" value="WRAPPER" />
-      </MavenGeneralSettings>
-    </option>
-  </component>
-  <component name="NextEditCompletionFeaturesState">
-    <decayedCancelled>
-      <entry key="MS100" value="1.0" />
-      <entry key="MS500" value="1.0000431020613714" />
-      <entry key="S2" value="1.1450290536885432" />
-      <entry key="S5" value="1.993987864246125" />
-      <entry key="S10" value="3.1025995994743036" />
-      <entry key="S30" value="4.683697868620166" />
-      <entry key="S60" value="5.281862119596798" />
-      <entry key="M2" value="5.649384066811498" />
-      <entry key="M5" value="6.718856875990286" />
-      <entry key="M10" value="9.220193203644111" />
-      <entry key="M15" value="11.152344818460907" />
-      <entry key="M30" value="15.008183607426112" />
-      <entry key="H1" value="23.338720010241975" />
-      <entry key="H2" value="38.59592381662864" />
-      <entry key="H4" value="54.86485287499341" />
-      <entry key="D1" value="77.1651606715314" />
-      <entry key="W1" value="82.13289483463045" />
-    </decayedCancelled>
-    <decayedSelected>
-      <entry key="MS100" value="0.0" />
-      <entry key="MS500" value="0.0" />
-      <entry key="S2" value="0.0" />
-      <entry key="S5" value="0.0" />
-      <entry key="S10" value="2.51835193590821E-252" />
-      <entry key="S30" value="1.360521702944143E-84" />
-      <entry key="S60" value="1.1664140421890118E-42" />
-      <entry key="M2" value="1.0800894566245871E-21" />
-      <entry key="M5" value="4.222074110503304E-9" />
-      <entry key="M10" value="7.864987666058362E-5" />
-      <entry key="M15" value="0.002344697091727679" />
-      <entry key="M30" value="0.07835708543497588" />
-      <entry key="H1" value="0.4765581607853904" />
-      <entry key="H2" value="1.1906547951797468" />
-      <entry key="H4" value="1.888005133077628" />
-      <entry key="D1" value="2.776769351771158" />
-      <entry key="W1" value="2.9670331831574672" />
-    </decayedSelected>
-    <decayedShown>
-      <entry key="MS100" value="0.9592641193252643" />
-      <entry key="MS500" value="0.991759523750451" />
-      <entry key="S2" value="1.1426604521187567" />
-      <entry key="S5" value="1.992310093205468" />
-      <entry key="S10" value="3.1012523738391136" />
-      <entry key="S30" value="4.682993877956018" />
-      <entry key="S60" value="5.281457895717762" />
-      <entry key="M2" value="5.649087108769336" />
-      <entry key="M5" value="6.718349145777351" />
-      <entry key="M10" value="9.219717057070973" />
-      <entry key="M15" value="11.154179789127163" />
-      <entry key="M30" value="15.085810968593107" />
-      <entry key="H1" value="23.81366610432996" />
-      <entry key="H2" value="39.784529190981296" />
-      <entry key="H4" value="56.75118195091071" />
-      <entry key="D1" value="79.9415052355" />
-      <entry key="W1" value="85.09986276681784" />
-    </decayedShown>
-  </component>
-  <component name="ProblemsViewState">
-    <option name="selectedTabId" value="CurrentFile" />
-  </component>
-  <component name="ProjectColorInfo">{
-  &quot;associatedIndex&quot;: 1,
-  &quot;fromUser&quot;: false
-}</component>
-  <component name="ProjectId" id="3JztAiWBNcYeh3Q852M6Oxzc3bw" />
-  <component name="ProjectLevelVcsManager">
-    <ConfirmationsSetting value="2" id="Add" />
-  </component>
+}]]></component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "customColor": "",
+  "associatedIndex": 7
+}]]></component>
+  <component name="ProjectId" id="3L78FPRiLi3uxu5P9jptI9Kx8yV" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Application.MainApplication.executor&quot;: &quot;Run&quot;,
-    &quot;Maven.TicTacToe2 [clean].executor&quot;: &quot;Run&quot;,
-    &quot;Maven.TicTacToe2 [compile].executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
-    &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
-    &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;server-connectie&quot;,
-    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/bilen/OneDrive - Hanze/2 jaar/programmeren/Tic-Tac-Toe&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.jshint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.jshint&quot;: &quot;&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;onboarding.tips.debug.path&quot;: &quot;/Users/maxadams/IdeaProjects/Tic-Tac-Toe/src/Main.java&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
-    &quot;python.packages.toolwindow.project.migrated.to.right.top.v2&quot;: &quot;true&quot;,
-    &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Application.MainApplication.executor&quot;: &quot;Run&quot;,
-    &quot;Maven.TicTacToe2 [clean].executor&quot;: &quot;Run&quot;,
-    &quot;Maven.TicTacToe2 [compile].executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
-    &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
-    &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/bilen/OneDrive - Hanze/2 jaar/programmeren/Tic-Tac-Toe&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.jshint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.jshint&quot;: &quot;&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;python.packages.toolwindow.project.migrated.to.right.top.v2&quot;: &quot;true&quot;,
-    &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "codeWithMe.voiceChat.enabledByDefault": "false",
+    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
+    "git-widget-placeholder": "main",
+    "junie.onboarding.icon.badge.shown": "true",
+    "kotlin-language-version-configured": "true",
+    "to.speed.mode.migration.done": "true"
   }
-}</component>
-  <component name="RecentsManager">
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/Server" />
-      <recent name="C:\Users\kayla\IdeaProjects\Tic-Tac-Toe\src\main\resources\avatar" />
-      <recent name="C:\Users\kayla\IdeaProjects\Tic-Tac-Toe\src\main\resources" />
-      <recent name="C:\Users\bilen\OneDrive - Hanze\periode 1\Object-georiënteerd programmeren I\github\Tic-Tac-Toe\src\main\resources\img" />
-    </key>
-  </component>
+}]]></component>
   <component name="RunManager">
-    <configuration default="true" type="PythonConfigurationType" factoryName="Python">
-      <module name="Tic-Tac-Toe" />
-      <option name="ENV_FILES" value="" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="" />
-      <option name="IS_MODULE_SDK" value="false" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="DEBUG_JUST_MY_CODE" value="false" />
-      <option name="RUN_TOOL" value="" />
-      <option name="SCRIPT_NAME" value="" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration default="true" type="Tox" factoryName="Tox">
-      <module name="Tic-Tac-Toe" />
-      <option name="ENV_FILES" value="" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="" />
-      <option name="IS_MODULE_SDK" value="false" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="DEBUG_JUST_MY_CODE" value="false" />
-      <option name="RUN_TOOL" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration name="MainApplication" type="Application" factoryName="Application" singleton="false" temporary="true" nameIsGenerated="true">
-      <option name="ALTERNATIVE_JRE_PATH" value="ms-21" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
+    <configuration name="Unnamed" type="Application" factoryName="Application" singleton="false" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="com.example.tictactoe2.MainApplication" />
       <module name="TicTacToe2" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="com.example.tictactoe2.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <recent_temporary>
-      <list>
-        <item itemvalue="Application.MainApplication" />
-      </list>
-    </recent_temporary>
   </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
         <option value="bundled-jdk-30f59d01ecdd-a203e0a19954-intellij.indexing.shared.core-IU-262.10315.125" />
         <option value="bundled-js-predefined-d6986cc7102b-4abd2a77f808-JavaScript-IU-262.10315.125" />
-        <option value="bundled-jdk-30f59d01ecdd-63390994e64e-intellij.indexing.shared.core-IU-262.8665.337" />
-        <option value="bundled-js-predefined-d6986cc7102b-4abd2a77f808-JavaScript-IU-262.8665.337" />
       </set>
     </attachedChunks>
   </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="0aa677c2-6e90-4f7c-bb6b-e1efecd5a55b" name="Changes" comment="" />
-      <created>1790675582932</created>
+      <changelist id="8803c90c-b5da-4649-b37f-17d9ecd0cc74" name="Changes" comment="" />
+      <created>1792793643378</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1790675582932</updated>
+      <updated>1792793643378</updated>
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
-  </component>
-  <component name="Vcs.Log.Tabs.Properties">
-    <option name="TAB_STATES">
-      <map>
-        <entry key="MAIN">
-          <value>
-            <State />
-          </value>
-        </entry>
-      </map>
-    </option>
-  <component name="Vcs.Log.Tabs.Properties">
-    <option name="TAB_STATES">
-      <map>
-        <entry key="MAIN">
-          <value>
-            <State />
-          </value>
-        </entry>
-      </map>
-    </option>
-  </component>
-  <component name="VcsManagerConfiguration">
-    <MESSAGE value="Functie toegevoegd waarmee een connectie gemaakt kan worden met de server voor een online modus" />
-    <MESSAGE value="Nieuw keuze menu toegevoegd bij de mode &quot;Computer vs Computer&quot; waarmee Online of Lokaal gekozen kan worden. Met de Online optie wordt een verbinding met de server gemaakt en kunnen 2 AI's tegen elkaar spelen" />
-    <option name="LAST_COMMIT_MESSAGE" value="Nieuw keuze menu toegevoegd bij de mode &quot;Computer vs Computer&quot; waarmee Online of Lokaal gekozen kan worden. Met de Online optie wordt een verbinding met de server gemaakt en kunnen 2 AI's tegen elkaar spelen" />
   </component>
 </project>
