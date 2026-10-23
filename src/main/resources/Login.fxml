@@ -32,8 +32,6 @@
                </children>
             </Pane>
 
-            <HBox fx:id="avatarGrid" alignment="CENTER" spacing="10.0" prefHeight="45.0" visible="false" managed="false" />
-
             <TextField id="txtUsername" fx:id="txtUsername" prefHeight="35.0" promptText="Username" stylesheets="@style.css">
                <font>
                   <Font name="Agency FB Bold" size="20.0" />
@@ -47,7 +45,7 @@
                   <Font name="Agency FB Bold" size="20.0" />
                </font>
             </Button>
-            <Label id="lblStatus" fx:id="lblStatus" text="your user?">
+            <Label id="lblStatus" fx:id="lblStatus" text="click on the cat to select your profile picture!">
                <font>
                   <Font name="Agency FB" size="12.0" />
                </font></Label>

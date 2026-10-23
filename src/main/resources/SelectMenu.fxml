@@ -1,42 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.geometry.Insets?>
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.shape.Polygon?>
 <?import javafx.scene.shape.SVGPath?>
-<?import javafx.scene.layout.Pane?>
-<?import javafx.scene.layout.Region?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0" prefWidth="750.0" style="-fx-background-color: F7E49B;" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.example.tictactoe2.SelectMenuController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0" prefWidth="750.0" style="-fx-background-color: F7E49B;" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.tictactoe2.SelectMenuController">
    <top>
       <HBox fx:id="headerBox" alignment="CENTER" prefHeight="90.0" prefWidth="750.0">
          <padding>
-            <Insets top="15.0" left="20.0" right="20.0" bottom="5.0" />
+            <Insets bottom="5.0" left="20.0" right="20.0" top="15.0" />
          </padding>
 
             <Pane prefHeight="70.0" prefWidth="180.0">
                <children>
-                  <Circle fx:id="lCircle" radius="28.0" fill="#BA5A5A" layoutX="25.0" layoutY="30.0" />
-                  <Polygon fx:id="lTriangle" points="0.0, 22.0, 22.0, -22.0, -22.0, -22.0" fill="#A4CE8B" layoutX="90.0" layoutY="50.0" rotate="-10.0" />
+                  <Circle fx:id="lCircle" fill="#BA5A5A" layoutX="25.0" layoutY="30.0" radius="28.0" />
+                  <Polygon fx:id="lTriangle" fill="#A4CE8B" layoutX="90.0" layoutY="50.0" points="0.0, 22.0, 22.0, -22.0, -22.0, -22.0" rotate="-10.0" />
                   <SVGPath fx:id="lCross" content="M 6 0 L 12 0 L 12 6 L 18 6 L 18 12 L 12 12 L 12 18 L 6 18 L 6 12 L 0 12 L 0 6 L 6 6 Z" fill="#86BCBD" layoutX="135.0" layoutY="20.0" rotate="25.0" scaleX="2.2" scaleY="2.2" />
                </children>
             </Pane>
 
             <Region HBox.hgrow="ALWAYS" />
 
-            <Label stylesheets="@label.css" styleClass="custom-label" fx:id="selectLabel" text="SELECT A GAME" textOverrun="CLIP"/>
+            <Label fx:id="selectLabel" styleClass="custom-label" stylesheets="@label.css" text="SELECT A GAME" textOverrun="CLIP" />
+         <Circle fx:id="profile"  radius="30.0"/>
 
             <Region HBox.hgrow="ALWAYS" />
 
             <Pane prefHeight="70.0" prefWidth="180.0">
                <children>
-                  <Polygon fx:id="rTrangle" points="0.0, -22.0, 22.0, 22.0, -22.0, 22.0" fill="#86BCBD" layoutX="40.0" layoutY="45.0" rotate="25.0" />
-                  <Circle fx:id="rCircle" radius="26.0" fill="#A4CE8B" layoutX="110.0" layoutY="25.0" />
+                  <Polygon fx:id="rTrangle" fill="#86BCBD" layoutX="40.0" layoutY="45.0" points="0.0, -22.0, 22.0, 22.0, -22.0, 22.0" rotate="25.0" />
+                  <Circle fx:id="rCircle" fill="#A4CE8B" layoutX="110.0" layoutY="25.0" radius="26.0" />
                   <SVGPath fx:id="rCross" content="M 6 0 L 12 0 L 12 6 L 18 6 L 18 12 L 12 12 L 12 18 L 6 18 L 6 12 L 0 12 L 0 6 L 6 6 Z" fill="#BA5A5A" layoutX="160.0" layoutY="35.0" rotate="-20.0" scaleX="2.2" scaleY="2.2" />
                </children>
             </Pane>
@@ -47,7 +47,7 @@
    <center>
       <HBox alignment="CENTER" spacing="30.0" BorderPane.alignment="CENTER">
          <padding>
-            <Insets top="20.0" bottom="10.0" left="5.0" right="5.0" />
+            <Insets bottom="10.0" left="5.0" right="5.0" top="20.0" />
          </padding>
          <children>
             <VBox fx:id="redCard" alignment="CENTER" spacing="20.0" style="-fx-background-color: BA5A5A;" styleClass="game-card" stylesheets="@cards.css" HBox.hgrow="ALWAYS" />
@@ -60,11 +60,10 @@
    <bottom>
       <HBox alignment="CENTER" BorderPane.alignment="CENTER">
          <padding>
-            <Insets top="0.0" bottom="12.0" left="5.0" right="5.0" />
+            <Insets bottom="12.0" left="5.0" right="5.0" top="0.0" />
          </padding>
          <children>
-            <Label fx:id="savedGameLabel" text="Opgeslagen spel" visible="false" managed="false"
-                   style="-fx-background-color: #86BCBD; -fx-text-fill: white; -fx-font-size: 15px; -fx-font-weight: bold; -fx-padding: 8 20 8 20; -fx-background-radius: 10; -fx-cursor: hand;" />
+            <Label fx:id="savedGameLabel" managed="false" style="-fx-background-color: #86BCBD; -fx-text-fill: white; -fx-font-size: 15px; -fx-font-weight: bold; -fx-padding: 8 20 8 20; -fx-background-radius: 10; -fx-cursor: hand;" text="Opgeslagen spel" visible="false" />
          </children>
       </HBox>
    </bottom>

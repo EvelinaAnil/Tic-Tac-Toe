@@ -7,7 +7,7 @@ import java.sql.Statement;
 
 public class Database {
 
-    private static final String URL = "jdbc:sqlite:tictactoe.db";
+    public static final String URL = "jdbc:sqlite:tictactoe.db";
 
     private static Connection connection;
 

@@ -1,5 +1,6 @@
 package com.example.tictactoe2;
 
+import framework.Database;
 import javafx.animation.Interpolator;
 import javafx.animation.PathTransition;
 import javafx.animation.Transition;
@@ -9,6 +10,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Point2D;
+import javafx.scene.Cursor;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
@@ -22,16 +24,22 @@ import javafx.scene.shape.Shape;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import framework.User;
 import framework.UserManager;
 
+import java.io.IOException;
+import java.nio.file.*;
+
+import javax.sql.DataSource;
+import java.io.File;
 import java.io.InputStream;
 import java.net.URL;
-import java.util.Arrays;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.sql.*;
+import java.util.*;
 
 public class MainController implements Initializable {
 
@@ -53,15 +61,9 @@ public class MainController implements Initializable {
     @FXML
     private HBox avatarGrid;
 
-    //list of preselected images found in avatar resources folder
-    private final List<String> AVATAR_PATHS = Arrays.asList(
-            "/avatar/nr1Winner.png",
-            "/avatar/hello.png",
-            "/avatar/whateverBro.png"
-    );
+    private File selectedAvatarFile = null;
 
-    private Circle selectedGridItem = null;
-    private String selectedAvatarPath = "";
+    private static final String URL = Database.URL;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -71,8 +73,13 @@ public class MainController implements Initializable {
         drawText(text, 32, center, center2);
         BackgroundShapes.createBackgroundShapes(bgShapesPane);
         setupAvatarDimensions();
-        buildAvatarSelectionGrid();
-        //animateShapes(bgShapesPane);
+
+        txtUsername.focusedProperty().addListener((obs, was, isNow) -> {
+            if (!isNow) {
+                String name = txtUsername.getText().trim();
+                if (!name.isEmpty()) loadSavedAvatar(name);
+            }
+        });
     }
 
     //center text! not perfect but IDK how to make the letters evenly spaced
@@ -144,97 +151,110 @@ public class MainController implements Initializable {
     private void setupAvatarDimensions() {
         mainAvatarView.setLayoutX(140.0);
         mainAvatarView.setLayoutY(60.0);
-
-        mainAvatarView.setCursor(javafx.scene.Cursor.HAND);
+        mainAvatarView.setCursor(Cursor.HAND);
 
         mainAvatarView.setOnMouseEntered(e -> mainAvatarView.setStroke(Color.web("#ba5a5a")));
         mainAvatarView.setOnMouseExited(e -> mainAvatarView.setStroke(Color.TRANSPARENT));
 
-        mainAvatarView.setOnMouseClicked(e -> {
-            boolean isNowVisible = !avatarGrid.isVisible();
-            avatarGrid.setVisible(isNowVisible);
-            avatarGrid.setManaged(isNowVisible);
-        });
+        mainAvatarView.setOnMouseClicked(e -> chooseAvatar());
 
-        setMainAvatar(AVATAR_PATHS.get(0));
+        // default image
+        setDefaultAvatar("/avatar/hello.png");
     }
 
-    private void buildAvatarSelectionGrid() {
-        for (String path : AVATAR_PATHS) {
-            InputStream stream = getClass().getResourceAsStream(path);
+    private void chooseAvatar() {
+        FileChooser chooser = new FileChooser();
+        chooser.setTitle("Choose your avatar");
+        chooser.getExtensionFilters().add(
+                new FileChooser.ExtensionFilter("Images", "*.png", "*.jpg", "*.jpeg", "*.gif", "*.bmp")
+        );
 
-            if (stream == null) {
-                System.err.println("[Avatar Error] Cannot find file at resource path: " + path);
-                continue;
-            }
+        // start in home folder
+        File home = new File(System.getProperty("user.home"));
+        if (home.isDirectory()) chooser.setInitialDirectory(home);
 
-            try {
-                Image img = new Image(stream);
+        Stage stage = (Stage) mainAvatarView.getScene().getWindow();
+        File file = chooser.showOpenDialog(stage);
 
-                if (img.isError()) {
-                    System.err.println("[Avatar Error] Corrupted image bytes at: " + path);
-                    continue;
-                }
-
-                Circle gridItem = new Circle(22);
-                gridItem.setFill(new ImagePattern(img));
-                gridItem.setStroke(Color.TRANSPARENT);
-                gridItem.setStrokeWidth(2.5);
-
-                if (AVATAR_PATHS.indexOf(path) == 0) {
-                    highlightSelection(gridItem);
-                }
-
-                configureGridItemEvents(gridItem, path);
-                avatarGrid.getChildren().add(gridItem);
-
-            } catch (Exception e) {
-                System.err.println("Failed compiling avatar pattern node for: " + path);
-            }
+        if (file != null) {
+            setMainAvatar(file);
         }
     }
 
-    private void configureGridItemEvents (Circle gridItem, String path){
-        gridItem.setOnMouseEntered(e -> {
-            if (gridItem != selectedGridItem) gridItem.setStroke(Color.web("#86BCBD"));
-        });
-
-        gridItem.setOnMouseExited(e -> {
-            if (gridItem != selectedGridItem) gridItem.setStroke(Color.TRANSPARENT);
-        });
-
-        gridItem.setOnMouseClicked(e -> {
-            setMainAvatar(path);
-            highlightSelection(gridItem);
-        });
-
-        gridItem.setOnMouseClicked(e -> {
-            setMainAvatar(path);
-            highlightSelection(gridItem);
-
-            avatarGrid.setVisible(false);
-            avatarGrid.setManaged(false);
-        });
+    private void setMainAvatar(File file) {
+        Image img = new Image(file.toURI().toString(), 200, 200, false, true);
+        if (img.isError()) {
+            System.err.println("[Avatar Error] Could not load image: " + file);
+            lblStatus.setText("That file isn't a valid image");
+            return;
+        }
+        mainAvatarView.setFill(new ImagePattern(img));
+        selectedAvatarFile = file;
     }
 
-    private void setMainAvatar (String path){
-        InputStream stream = getClass().getResourceAsStream(path);
-        if (stream != null) {
-            Image img = new Image(stream);
-            if (!img.isError()) {
-                mainAvatarView.setFill(new ImagePattern(img));
-                this.selectedAvatarPath = path;
+    private void setDefaultAvatar(String resourcePath) {
+        InputStream stream = getClass().getResourceAsStream(resourcePath);
+        if (stream == null) {
+            System.err.println("[Avatar Error] Missing default avatar: " + resourcePath);
+            return;
+        }
+        Image img = new Image(stream);
+        if (!img.isError()) {
+            mainAvatarView.setFill(new ImagePattern(img));
+        }
+    }
+
+    public static void saveAvatar(String username, String avatarPath) {
+        String sql = """
+            INSERT INTO users (username, profile_pic) VALUES (?, ?)
+            ON CONFLICT(username) DO UPDATE SET profile_pic = excluded.profile_pic
+            """;
+        try (Connection c = DriverManager.getConnection(URL);
+             PreparedStatement ps = c.prepareStatement(sql)) {
+            ps.setString(1, username);
+            ps.setString(2, avatarPath);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static String loadAvatar(String username) {
+        String sql = "SELECT profile_pic FROM users WHERE username = ?";
+        try (Connection c = DriverManager.getConnection(URL);
+             PreparedStatement ps = c.prepareStatement(sql)) {
+            ps.setString(1, username);
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next() ? rs.getString("profile_pic") : null;
             }
-        } else {
-            System.err.println("[Avatar Error] Main fallback stream is null for: " + path);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
         }
     }
 
-    private void highlightSelection (Circle targetCircle){
-        if (selectedGridItem != null) {
-            selectedGridItem.setStroke(Color.TRANSPARENT);
+    /** Creates a folder in user folder and saves selected image there as fallback */
+    private Path copyAvatarToAppFolder(File source, String username) throws IOException {
+        Path dir = Paths.get(System.getProperty("user.home"), ".tictactoe", "avatars");
+        Files.createDirectories(dir);
+
+        String name = source.getName();
+        String ext = name.contains(".") ? name.substring(name.lastIndexOf('.')) : ".png";
+        String safeUser = username.replaceAll("[^a-zA-Z0-9_-]", "_");
+
+        Path target = dir.resolve(safeUser + ext);
+        Files.copy(source.toPath(), target, StandardCopyOption.REPLACE_EXISTING);
+        return target;
+    }
+
+    private void loadSavedAvatar(String username) {
+        String path = MainController.loadAvatar(username);
+        if (path != null) {
+            File f = new File(path);
+            if (f.exists()) {
+                setMainAvatar(f);
+            }
         }
-        selectedGridItem = targetCircle;
     }
 
     //login logic
@@ -245,6 +265,16 @@ public class MainController implements Initializable {
         if (username.isEmpty()) {
             lblStatus.setText("Please enter a username");
             return;
+        }
+
+        if (selectedAvatarFile != null) {
+            try {
+                Path saved = copyAvatarToAppFolder(selectedAvatarFile, username);
+                MainController.saveAvatar(username, saved.toString());
+            } catch (IOException e) {
+                e.printStackTrace();
+                lblStatus.setText("Could not save avatar");
+            }
         }
 
         User user = userManager.login(username);
