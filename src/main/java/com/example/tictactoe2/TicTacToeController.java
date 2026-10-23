@@ -1,6 +1,9 @@
 package com.example.tictactoe2;
 
 import games.tictactoe.Board;
+import games.tictactoe.Computer;
+import javafx.animation.PauseTransition;
+import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -144,6 +147,7 @@ public class TicTacToeController implements Initializable {
         if (board.hasWinner(currentPlayer)) {
             lblStatus.setText("Player " + currentPlayer + " wins!");
             gameOver = true;
+            highlightWinningCombination();
             return;
         }
         if (board.isFull()) {
@@ -179,6 +183,7 @@ public class TicTacToeController implements Initializable {
         if (board.hasWinner(currentPlayer)) {
             lblStatus.setText("Computer " + currentPlayer + " wins!");
             gameOver = true;
+            highlightWinningCombination();
             return;
         }
 

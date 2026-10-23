@@ -11,8 +11,13 @@ import javafx.fxml.Initializable;
 import javafx.geometry.Point2D;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Arc;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Shape;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -22,7 +27,10 @@ import javafx.util.Duration;
 import framework.User;
 import framework.UserManager;
 
+import java.io.InputStream;
 import java.net.URL;
+import java.util.Arrays;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class MainController implements Initializable {
@@ -39,13 +47,31 @@ public class MainController implements Initializable {
     @FXML
     private Pane bgShapesPane;
 
+    @FXML
+    private Circle mainAvatarView;
+
+    @FXML
+    private HBox avatarGrid;
+
+    //list of preselected images found in avatar resources folder
+    private final List<String> AVATAR_PATHS = Arrays.asList(
+            "/avatar/nr1Winner.png",
+            "/avatar/hello.png",
+            "/avatar/whateverBro.png"
+    );
+
+    private Circle selectedGridItem = null;
+    private String selectedAvatarPath = "";
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        Point2D center = new Point2D(140, 250);
+        Point2D center = new Point2D(140, 180);
         Point2D center2 = new Point2D(160, 50);
         String text = "ISY GAMES";
         drawText(text, 32, center, center2);
         BackgroundShapes.createBackgroundShapes(bgShapesPane);
+        setupAvatarDimensions();
+        buildAvatarSelectionGrid();
         //animateShapes(bgShapesPane);
     }
 
@@ -112,6 +138,103 @@ public class MainController implements Initializable {
         arc.setRadiusX(radius);
         arc.setRadiusY(radius);
         return arc;
+    }
+
+    //image picker
+    private void setupAvatarDimensions() {
+        mainAvatarView.setLayoutX(140.0);
+        mainAvatarView.setLayoutY(60.0);
+
+        mainAvatarView.setCursor(javafx.scene.Cursor.HAND);
+
+        mainAvatarView.setOnMouseEntered(e -> mainAvatarView.setStroke(Color.web("#ba5a5a")));
+        mainAvatarView.setOnMouseExited(e -> mainAvatarView.setStroke(Color.TRANSPARENT));
+
+        mainAvatarView.setOnMouseClicked(e -> {
+            boolean isNowVisible = !avatarGrid.isVisible();
+            avatarGrid.setVisible(isNowVisible);
+            avatarGrid.setManaged(isNowVisible);
+        });
+
+        setMainAvatar(AVATAR_PATHS.get(0));
+    }
+
+    private void buildAvatarSelectionGrid() {
+        for (String path : AVATAR_PATHS) {
+            InputStream stream = getClass().getResourceAsStream(path);
+
+            if (stream == null) {
+                System.err.println("[Avatar Error] Cannot find file at resource path: " + path);
+                continue;
+            }
+
+            try {
+                Image img = new Image(stream);
+
+                if (img.isError()) {
+                    System.err.println("[Avatar Error] Corrupted image bytes at: " + path);
+                    continue;
+                }
+
+                Circle gridItem = new Circle(22);
+                gridItem.setFill(new ImagePattern(img));
+                gridItem.setStroke(Color.TRANSPARENT);
+                gridItem.setStrokeWidth(2.5);
+
+                if (AVATAR_PATHS.indexOf(path) == 0) {
+                    highlightSelection(gridItem);
+                }
+
+                configureGridItemEvents(gridItem, path);
+                avatarGrid.getChildren().add(gridItem);
+
+            } catch (Exception e) {
+                System.err.println("Failed compiling avatar pattern node for: " + path);
+            }
+        }
+    }
+
+    private void configureGridItemEvents (Circle gridItem, String path){
+        gridItem.setOnMouseEntered(e -> {
+            if (gridItem != selectedGridItem) gridItem.setStroke(Color.web("#86BCBD"));
+        });
+
+        gridItem.setOnMouseExited(e -> {
+            if (gridItem != selectedGridItem) gridItem.setStroke(Color.TRANSPARENT);
+        });
+
+        gridItem.setOnMouseClicked(e -> {
+            setMainAvatar(path);
+            highlightSelection(gridItem);
+        });
+
+        gridItem.setOnMouseClicked(e -> {
+            setMainAvatar(path);
+            highlightSelection(gridItem);
+
+            avatarGrid.setVisible(false);
+            avatarGrid.setManaged(false);
+        });
+    }
+
+    private void setMainAvatar (String path){
+        InputStream stream = getClass().getResourceAsStream(path);
+        if (stream != null) {
+            Image img = new Image(stream);
+            if (!img.isError()) {
+                mainAvatarView.setFill(new ImagePattern(img));
+                this.selectedAvatarPath = path;
+            }
+        } else {
+            System.err.println("[Avatar Error] Main fallback stream is null for: " + path);
+        }
+    }
+
+    private void highlightSelection (Circle targetCircle){
+        if (selectedGridItem != null) {
+            selectedGridItem.setStroke(Color.TRANSPARENT);
+        }
+        selectedGridItem = targetCircle;
     }
 
     //login logic
