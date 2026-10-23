@@ -6,8 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="0aa677c2-6e90-4f7c-bb6b-e1efecd5a55b" name="Changes" comment="Nieuw keuze menu toegevoegd bij de mode &quot;Computer vs Computer&quot; waarmee Online of Lokaal gekozen kan worden. Met de Online optie wordt een verbinding met de server gemaakt en kunnen 2 AI's tegen elkaar spelen">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/tictactoe2/SelectMenuController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/tictactoe2/SelectMenuController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/tictactoe2/TicTacToeController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/tictactoe2/TicTacToeController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Server/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/Server/README.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -15,6 +14,11 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="main" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="GitHubPullRequestSearchHistory">{
