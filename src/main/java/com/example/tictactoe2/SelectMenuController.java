@@ -40,11 +40,6 @@ import java.io.IOException;
 
 public class SelectMenuController implements Initializable {
 
-    @FXML private Pane headerPane;
-    @FXML private HBox headerBox;
-
-    @FXML private Label selectLabel;
-
     @FXML private Label savedGameLabel;
 
     @FXML private VBox redCard;
@@ -170,7 +165,7 @@ public class SelectMenuController implements Initializable {
         redCard.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                Alert dialog = new Alert(Alert.AlertType.CONFIRMATION);
+                Alert dialog = new Alert(Alert.AlertType.NONE);
                 dialog.setTitle("Kies Speltype");
                 dialog.setHeaderText("Speler vs Speler");
                 dialog.setContentText("Kies hoe je wilt spelen:");
@@ -212,14 +207,28 @@ public class SelectMenuController implements Initializable {
         blueCard.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
+                Alert dialog = new Alert(Alert.AlertType.NONE);
+                dialog.setTitle("Kies Speltype");
+                dialog.setHeaderText("Speler vs Speler");
+                dialog.setContentText("Kies hoe je wilt spelen:");
+
+                ButtonType btnLocal = new ButtonType("Lokaal");
+                ButtonType btnOnline = new ButtonType("Online");
+                ButtonType btnCancel = new ButtonType("Annuleren", ButtonBar.ButtonData.CANCEL_CLOSE);
+
+                dialog.getButtonTypes().setAll(btnLocal, btnOnline, btnCancel);
+
+                Optional<ButtonType> result = dialog.showAndWait();
+                if (result.isEmpty() || result.get() == btnCancel) return;
+
+                Session.setOnline(result.get() == btnOnline);
                 Session.setVsComputer(true);
                 Session.setCvC(true);
-                showDifficultyMenu();
+                Session.setDifficulty("HARD");
+                openGameByName("Tic-Tac-Toe");
             }
         });
     }
-
-
 
     private void addCardLabel(VBox card, String text) {
         if (card == null) {
@@ -283,7 +292,6 @@ public class SelectMenuController implements Initializable {
             Game game = games.get(i);
             if (game.getName().equals(name)) {
 
-                // PAS HIER AAN: Alleen verbinding maken als de online modus gekozen is
                 if (Session.isOnline()) {
                     if (Session.getServerConnection() == null) {
                         String username = (Session.getUser() != null)

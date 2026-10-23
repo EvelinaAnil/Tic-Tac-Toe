@@ -51,6 +51,9 @@ public class TicTacToeController implements Initializable, ServerListener {
     private boolean isMyTurn = false;
     private char mySymbol = 'X';
     private char opponentSymbol = 'O';
+    private boolean isOnlineAi = false;
+    private static final int AI_MOVE_DELAY_MS = 800;
+    private PauseTransition aiPause;
 
     /**
      * JavaFX view over the ported {@link Board} logic. This is the JavaFX
@@ -169,6 +172,11 @@ public class TicTacToeController implements Initializable, ServerListener {
 
     private void initOnline() {
         resetBoardUI();
+        isOnlineAi = Session.isCvC();
+        if (isOnlineAi) {
+            computer = new Computer();
+            computer.setDifficulty(Session.getDifficulty());
+        }
         serverConnection = Session.getServerConnection();
 
         if (serverConnection != null) {
@@ -190,6 +198,7 @@ public class TicTacToeController implements Initializable, ServerListener {
     }
 
     private void handleOnlineClick(int row, int col) {
+        if (isOnlineAi) return;
         if (gameOver || !isMyTurn) {
             return;
         }
@@ -333,9 +342,18 @@ public class TicTacToeController implements Initializable, ServerListener {
     }
 
     @FXML
+    private void stopAiPause() {
+        if (aiPause != null) {
+            aiPause.stop();
+            aiPause = null;
+        }
+    }
+
+    @FXML
     private void onBack() {
         if (isOnlineMode) {
             if (serverConnection != null) {
+                stopAiPause();
                 serverConnection.forfeit();
             }
         } else {
@@ -419,7 +437,22 @@ public class TicTacToeController implements Initializable, ServerListener {
     public void onYourTurn(String turnMessage) {
         Platform.runLater(() -> {
             isMyTurn = true;
-            lblStatus.setText("Jouw beurt! (" + mySymbol + ")");
+            if (isOnlineAi) {
+                lblStatus.setText("AI is thinking.. (" + mySymbol + ")");
+               stopAiPause();
+               aiPause = new PauseTransition(Duration.millis(AI_MOVE_DELAY_MS));
+               aiPause.setOnFinished(e -> {
+                   if (gameOver || !isMyTurn) {
+                       return;
+                   }
+                   int[] move = computer.getBestMove(board, mySymbol, opponentSymbol);
+                   isMyTurn = false;
+                   serverConnection.sendMove(move[0] * 3 + move[1]);
+               });
+               aiPause.play();
+            } else {
+                lblStatus.setText("Jouw beurt! (" + mySymbol + ")");
+            }
         });
     }
 
@@ -446,6 +479,7 @@ public class TicTacToeController implements Initializable, ServerListener {
     @Override
     public void onGameOver(String result, String comment) {
         Platform.runLater(() -> {
+            stopAiPause();
             gameOver = true;
             isMyTurn = false;
             if ("WIN".equalsIgnoreCase(result)) {
