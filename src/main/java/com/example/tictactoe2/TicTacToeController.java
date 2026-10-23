@@ -17,6 +17,8 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.util.Duration;
+import javafx.scene.layout.Pane;
+
 
 import java.net.URL;
 import java.util.List;
@@ -30,9 +32,14 @@ import java.util.ResourceBundle;
  */
 public class TicTacToeController implements Initializable, ServerListener {
 
-    @FXML private GridPane grid;
+    @FXML
+    private GridPane grid;
 
-    @FXML private Label lblStatus;
+    @FXML
+    private Label lblStatus;
+
+    @FXML
+    private Pane bgShapesPane;
 
     private Board board;
     private char currentPlayer;
@@ -67,6 +74,22 @@ public class TicTacToeController implements Initializable, ServerListener {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        BackgroundShapes.createBackgroundShapes(bgShapesPane);
+
+        computer = new Computer();
+        computerO = new Computer();
+
+        isVsComputer = Session.isVsComputer();
+        isCvcMode = Session.isCvC();
+
+
+        // instellingen op uit de Session
+        isVsComputer = Session.isVsComputer();
+        if (isVsComputer) {
+            computer.setDifficulty(Session.getDifficulty());
+            computerO.setDifficulty(Session.getDifficulty());
+        }
+
         for (int row = 0; row < 3; row++) {
             for (int col = 0; col < 3; col++) {
                 final int r = row;
@@ -232,6 +255,7 @@ public class TicTacToeController implements Initializable, ServerListener {
         if (board.hasWinner(currentPlayer)) {
             lblStatus.setText("Player " + currentPlayer + " wins!");
             gameOver = true;
+            highlightWinningCombination();
             return;
         }
         if (board.isFull()) {
@@ -263,6 +287,7 @@ public class TicTacToeController implements Initializable, ServerListener {
         if (board.hasWinner(currentPlayer)) {
             lblStatus.setText("Player " + currentPlayer + " wins!");
             gameOver = true;
+            highlightWinningCombination();
             return;
         }
         if (board.isFull()) {
@@ -298,6 +323,7 @@ public class TicTacToeController implements Initializable, ServerListener {
         if (board.hasWinner(currentPlayer)) {
             lblStatus.setText("Computer " + currentPlayer + " wins!");
             gameOver = true;
+            highlightWinningCombination();
             return;
         }
 
@@ -326,6 +352,59 @@ public class TicTacToeController implements Initializable, ServerListener {
         if (cvcPause != null) {
             cvcPause.stop();
             cvcPause = null;
+        }
+    }
+
+    private void highlightWinningCombination() {
+        String mark = String.valueOf(currentPlayer);
+        String highlightStyle = "-fx-background-color: #ba5a5a; -fx-text-fill: black; -fx-font-weight: bold;";
+
+        //Rows
+        for (int r = 0; r < 3; r++) {
+            if (buttons[r][0].getText().equals(mark) &&
+                    buttons[r][1].getText().equals(mark) &&
+                    buttons[r][2].getText().equals(mark)) {
+
+                buttons[r][0].setStyle(highlightStyle);
+                buttons[r][1].setStyle(highlightStyle);
+                buttons[r][2].setStyle(highlightStyle);
+                return;
+            }
+        }
+
+        //Columns
+        for (int c = 0; c < 3; c++) {
+            if (buttons[0][c].getText().equals(mark) &&
+                    buttons[1][c].getText().equals(mark) &&
+                    buttons[2][c].getText().equals(mark)) {
+
+                buttons[0][c].setStyle(highlightStyle);
+                buttons[1][c].setStyle(highlightStyle);
+                buttons[2][c].setStyle(highlightStyle);
+                return;
+            }
+        }
+
+        //Bottom-Right Diagonal
+        if (buttons[0][0].getText().equals(mark) &&
+                buttons[1][1].getText().equals(mark) &&
+                buttons[2][2].getText().equals(mark)) {
+
+            buttons[0][0].setStyle(highlightStyle);
+            buttons[1][1].setStyle(highlightStyle);
+            buttons[2][2].setStyle(highlightStyle);
+            return;
+        }
+
+        //Bottom-Left Diagonal
+        if (buttons[0][2].getText().equals(mark) &&
+                buttons[1][1].getText().equals(mark) &&
+                buttons[2][0].getText().equals(mark)) {
+
+            buttons[0][2].setStyle(highlightStyle);
+            buttons[1][1].setStyle(highlightStyle);
+            buttons[2][0].setStyle(highlightStyle);
+            return;
         }
     }
 
@@ -413,6 +492,7 @@ public class TicTacToeController implements Initializable, ServerListener {
         for (int row = 0; row < 3; row++) {
             for (int col = 0; col < 3; col++) {
                 buttons[row][col].setText(" ");
+                buttons[row][col].setStyle(""); //clears highlight
             }
         }
     }

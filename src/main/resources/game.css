@@ -1,0 +1,22 @@
+@font-face {
+    font-family: 'Horizon';
+    src: url('fonts/Horizon.otf');
+}
+
+@font-face {
+    font-family: 'Agency FB';
+    src: url('./fonts/AGENCYB.ttf');
+}
+
+#lblStatus {
+    -fx-font-family: "Agency FB";
+}
+
+#logo {
+    -fx-font-family: Horizon;
+}
+
+#grid {
+    -fx-font-size: 20pt;
+    -fx-font-family: Horizon;
+}

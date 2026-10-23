@@ -1,5 +1,6 @@
 package com.example.tictactoe2;
 
+import framework.AvatarLoader;
 import framework.Game;
 import framework.GameSave;
 import java.net.URL;
@@ -31,6 +32,8 @@ import javafx.scene.image.ImageView;
 import framework.network.ServerConnection;
 import java.io.IOException;
 
+import com.example.tictactoe2.MainController;
+
 /**
  * Controls the main menu screen where users can select game modes and difficulty levels.
  *
@@ -53,6 +56,8 @@ public class SelectMenuController implements Initializable {
     @FXML private Polygon rTrangle;
     @FXML private Circle rCircle;
     @FXML private SVGPath rCross;
+
+    @FXML private Circle profile;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -105,6 +110,10 @@ public class SelectMenuController implements Initializable {
         makeCardZoomable(redCard);
         makeCardZoomable(greenCard);
         makeCardZoomable(blueCard);
+
+        //show profile picture in selection menu
+        String username = Session.getUser().getUsername();
+        AvatarLoader.applyTo(profile, username);
 
         setupCards();
         setupSavedGame();

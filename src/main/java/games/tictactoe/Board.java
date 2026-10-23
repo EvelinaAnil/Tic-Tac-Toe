@@ -1,5 +1,7 @@
 package games.tictactoe;
 
+import com.example.tictactoe2.MainController;
+
 public class Board {
 
     private char[][] cells = new char[3][3];
