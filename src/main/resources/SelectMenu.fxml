@@ -28,7 +28,7 @@
 
             <Region HBox.hgrow="ALWAYS" />
 
-            <Label fx:id="selectLabel" styleClass="custom-label" stylesheets="@label.css" text="SELECT A GAME" textOverrun="CLIP" />
+            <Label fx:id="selectLabel" styleClass="custom-label" stylesheets="@label.css" text="SELECT GAMEMODE" textOverrun="CLIP" />
          <Circle fx:id="profile"  radius="30.0"/>
 
             <Region HBox.hgrow="ALWAYS" />
