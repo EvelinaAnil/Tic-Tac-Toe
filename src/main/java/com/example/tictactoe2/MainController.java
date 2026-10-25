@@ -280,6 +280,6 @@ public class MainController implements Initializable {
         User user = userManager.login(username);
         Session.setUser(user);
         lblStatus.setText("Welcome " + user.getUsername());
-        Navigator.goTo("/SelectMenu.fxml");
+        Navigator.goTo("/MainMenu.fxml");
     }
 }

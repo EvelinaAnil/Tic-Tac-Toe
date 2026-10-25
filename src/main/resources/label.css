@@ -5,7 +5,7 @@
 
 .custom-label {
     -fx-font-family: 'Horizon';
-    -fx-font-size: 40.0px;
+    -fx-font-size: 35.0px;
     -fx-font-weight: bold;
     -fx-fill: black;
 }
