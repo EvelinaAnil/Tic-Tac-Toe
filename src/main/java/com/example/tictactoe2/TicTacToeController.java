@@ -11,13 +11,11 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.util.Duration;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.HBox;
 
 
 import java.net.URL;
@@ -40,6 +38,22 @@ public class TicTacToeController implements Initializable, ServerListener {
 
     @FXML
     private Pane bgShapesPane;
+
+    @FXML
+    private HBox messageBox;
+
+    @FXML private TextField txtMessage;    @FXML
+    private void onSendMessage() {
+        if (!isOnlineMode || serverConnection == null) {
+            return;
+        }
+        String text = txtMessage.getText().trim();
+        if (text.isEmpty()) {
+            return;
+        }
+        serverConnection.sendMessage(text);
+        txtMessage.clear();
+    }
 
     private Board board;
     private char currentPlayer;
@@ -130,6 +144,9 @@ public class TicTacToeController implements Initializable, ServerListener {
         isVsComputer = Session.isVsComputer();
         isCvcMode = Session.isCvC();
 
+        messageBox.setVisible(false);
+        messageBox.setManaged(false);
+
         // instellingen op uit de Session
         if (isVsComputer) {
             computer.setDifficulty(Session.getDifficulty());
@@ -207,6 +224,12 @@ public class TicTacToeController implements Initializable, ServerListener {
             lblStatus.setText("Wachten op tegenstander...");
         } else {
             lblStatus.setText("Geen verbinding met de server.");
+        }
+
+        if (Session.isTournament()) {
+            lblStatus.setText("Verbonden. Wachten tot het toernooi start...");
+        } else {
+            lblStatus.setText("Wachten op tegenstander...");
         }
 
         isMyTurn = false;
@@ -410,6 +433,10 @@ public class TicTacToeController implements Initializable, ServerListener {
 
     @FXML
     private void onReset() {
+        if (Session.isTournament()) {
+            return;
+        }
+
         if (isOnlineMode) {
             if (serverConnection != null) {
                 serverConnection.subscribe("Tic-tac-toe");

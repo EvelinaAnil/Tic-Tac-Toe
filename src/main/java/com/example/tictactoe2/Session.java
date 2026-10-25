@@ -75,6 +75,16 @@ public class Session {
         isOnline = online;
     }
 
+    private static boolean isTournament = false;
+
+    public static boolean isTournament() {
+        return isTournament;
+    }
+
+    public static void setTournament(boolean tournament) {
+        isTournament = tournament;
+    }
+
     private static boolean loadSavedGame = false;
 
     public static boolean isLoadSavedGame() {

@@ -9,6 +9,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.control.TextField?>
 
 <StackPane prefHeight="500.0" prefWidth="1000.0" stylesheets="@game.css" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.tictactoe2.TicTacToeController">
     <children>
@@ -44,6 +45,10 @@
                             </font>
                         </Button>
                     </children>
+                </HBox>
+                <HBox fx:id="messageBox" alignment="CENTER" spacing="8" maxWidth="400.0">
+                    <TextField fx:id="txtMessage" promptText="Typ een bericht..." HBox.hgrow="ALWAYS"/>
+                    <Button text="Verstuur" onAction="#onSendMessage"/>
                 </HBox>
             </children>
         </VBox>

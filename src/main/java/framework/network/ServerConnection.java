@@ -119,6 +119,14 @@ public class ServerConnection {
         }
     }
 
+    public void sendMessage(String text) {
+        String clean = text.replace("\n", " ").replace("\r", " ").replace("\"", "'");
+        if (clean.length() > 128) {
+            clean = clean.substring(0, 128);
+        }
+        send("message \"" + clean + "\"");
+    }
+
     public void disconnect() {
         running = false;
         send("logout");

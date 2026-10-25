@@ -4,16 +4,8 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-//import javafx.event.ActionEvent;
-import javafx.scene.image.Image;
-import javafx.scene.paint.Color;
-import javafx.scene.paint.ImagePattern;
-import javafx.scene.shape.Circle;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
-
-import java.lang.reflect.Array;
-import java.util.List;
 
 public class MainApplication extends Application {
     @Override
@@ -30,6 +22,12 @@ public class MainApplication extends Application {
             primaryStage.show();
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+    @Override
+    public void stop() {
+        if (Session.getServerConnection() != null) {
+            Session.getServerConnection().disconnect();
         }
     }
 }

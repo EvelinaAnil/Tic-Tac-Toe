@@ -20,8 +20,6 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Polygon;
@@ -32,7 +30,6 @@ import javafx.scene.image.ImageView;
 import framework.network.ServerConnection;
 import java.io.IOException;
 
-import com.example.tictactoe2.MainController;
 
 /**
  * Controls the main menu screen where users can select game modes and difficulty levels.
@@ -167,7 +164,6 @@ public class SelectMenuController implements Initializable {
     }
 
     private void setupCards() {
-        List<Game> games = Session.getGameManager().getGames();
         System.out.println("DEBUG: setupCards() wordt uitgevoerd!"); // Kijken of de methode überhaupt start
 
         addCardContent(redCard, "/img/pvp.png", "vs Speler");
@@ -218,19 +214,21 @@ public class SelectMenuController implements Initializable {
             public void handle(MouseEvent event) {
                 Alert dialog = new Alert(Alert.AlertType.NONE);
                 dialog.setTitle("Kies Speltype");
-                dialog.setHeaderText("Speler vs Speler");
+                dialog.setHeaderText("Computer vs Computer");
                 dialog.setContentText("Kies hoe je wilt spelen:");
 
                 ButtonType btnLocal = new ButtonType("Lokaal");
                 ButtonType btnOnline = new ButtonType("Online");
+                ButtonType btnTournament = new ButtonType("Toernooi");
                 ButtonType btnCancel = new ButtonType("Annuleren", ButtonBar.ButtonData.CANCEL_CLOSE);
 
-                dialog.getButtonTypes().setAll(btnLocal, btnOnline, btnCancel);
+                dialog.getButtonTypes().setAll(btnLocal, btnOnline, btnTournament, btnCancel);
 
                 Optional<ButtonType> result = dialog.showAndWait();
                 if (result.isEmpty() || result.get() == btnCancel) return;
 
-                Session.setOnline(result.get() == btnOnline);
+                Session.setOnline(result.get() != btnLocal);
+                Session.setTournament(result.get().equals(btnTournament));
                 Session.setVsComputer(true);
                 Session.setCvC(true);
                 Session.setDifficulty("HARD");
@@ -245,7 +243,6 @@ public class SelectMenuController implements Initializable {
         }
         // wis eerst
         card.getChildren().clear();
-
 
         Label label = new Label(text);
         label.setStyle("-fx-text-fill: white; -fx-font-size: 18px; -fx-font-weight: bold;");
@@ -315,7 +312,9 @@ public class SelectMenuController implements Initializable {
                             return;
                         }
                     }
-                    Session.getServerConnection().subscribe("Tic-tac-toe");
+                    if (!Session.isTournament()) {
+                        Session.getServerConnection().subscribe("Tic-tac-toe");
+                    }
                 }
 
                 Navigator.goTo("/TicTacToe.fxml");
