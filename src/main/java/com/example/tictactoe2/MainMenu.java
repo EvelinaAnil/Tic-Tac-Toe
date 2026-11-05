@@ -55,6 +55,10 @@ public class MainMenu implements Initializable {
     @FXML
     private Circle profile;
 
+    @FXML
+    private void openScoreBoard() {
+        Navigator.goTo("/ScoreBoard.fxml");
+    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
