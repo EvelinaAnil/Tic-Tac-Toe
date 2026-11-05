@@ -57,7 +57,7 @@ public class ServerConnection {
     }
 
     public void sendMove(int move) {
-        send("move " + move);
+        send("choose " + move);
     }
 
     public void forfeit() {

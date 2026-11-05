@@ -304,6 +304,7 @@ public class SelectMenuController implements Initializable {
                                 ? Session.getUser().getUsername()
                                 : "Player_" + (System.currentTimeMillis() % 1000);
                         try {
+                            // 172.201.112.199
                             ServerConnection connection = new ServerConnection("localhost", 7789, username);
                             connection.connect();
                             Session.setServerConnection(connection);

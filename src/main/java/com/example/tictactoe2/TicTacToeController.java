@@ -5,6 +5,7 @@ import framework.network.ServerConnection;
 import framework.network.ServerListener;
 import games.tictactoe.Board;
 import games.tictactoe.Computer;
+import games.tictactoe.Engine;
 import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -23,11 +24,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
-/**
- * JavaFX view over the ported {@link Board} logic. This is the JavaFX
- * equivalent of the old Swing GameScreen: it renders a 3x3 grid of buttons
- * and delegates all rules (placing marks, win/draw detection) to Board.
- */
 public class TicTacToeController implements Initializable, ServerListener {
 
     @FXML
@@ -55,34 +51,23 @@ public class TicTacToeController implements Initializable, ServerListener {
         txtMessage.clear();
     }
 
-    private Board board;
-    private char currentPlayer;
-    private boolean gameOver;
-
-    // declaratie van de computer
-    private Computer computer;
-    private Computer computerO;
+    private Engine engine;
     private boolean isCvcMode = false;
-    private  boolean isVsComputer = true;
+    private boolean isVsComputer = true;
 
-    private PauseTransition cvcPause; // Animatie timer voor CvC zetten
+    private PauseTransition cvcPause;
 
+    private Board onlineBoard;
+    private boolean onlineGameOver;
     private boolean isOnlineMode = false;
     private ServerConnection serverConnection;
     private boolean isMyTurn = false;
     private char mySymbol = 'X';
     private char opponentSymbol = 'O';
     private boolean isOnlineAi = false;
+    private Computer onlineAi;
     private static final int AI_MOVE_DELAY_MS = 800;
     private PauseTransition aiPause;
-
-    /**
-     * JavaFX view over the ported {@link Board} logic. This is the JavaFX
-     * equivalent of the old Swing GameScreen: it renders a 3x3 grid of buttons
-     * and delegates all rules (placing marks, win/draw detection) to Board.
-     */
-
-
 
     private final Button[][] buttons = new Button[3][3];
 
@@ -90,19 +75,8 @@ public class TicTacToeController implements Initializable, ServerListener {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         BackgroundShapes.createBackgroundShapes(bgShapesPane);
 
-        computer = new Computer();
-        computerO = new Computer();
-
         isVsComputer = Session.isVsComputer();
         isCvcMode = Session.isCvC();
-
-
-        // instellingen op uit de Session
-        isVsComputer = Session.isVsComputer();
-        if (isVsComputer) {
-            computer.setDifficulty(Session.getDifficulty());
-            computerO.setDifficulty(Session.getDifficulty());
-        }
 
         for (int row = 0; row < 3; row++) {
             for (int col = 0; col < 3; col++) {
@@ -138,20 +112,13 @@ public class TicTacToeController implements Initializable, ServerListener {
     }
 
     private void initLocal() {
-        computer = new Computer();
-        computerO = new Computer();
-
         isVsComputer = Session.isVsComputer();
         isCvcMode = Session.isCvC();
 
         messageBox.setVisible(false);
         messageBox.setManaged(false);
 
-        // instellingen op uit de Session
-        if (isVsComputer) {
-            computer.setDifficulty(Session.getDifficulty());
-            computerO.setDifficulty(Session.getDifficulty());
-        }
+        engine = new Engine(isVsComputer, isCvcMode, Session.getDifficulty());
 
         if (Session.isLoadSavedGame()) {
             Session.setLoadSavedGame(false);
@@ -170,20 +137,18 @@ public class TicTacToeController implements Initializable, ServerListener {
         }
 
         stopCvc();
-        board = new Board();
-        gameOver = false;
+        engine.restore(save.boardState, save.currentPlayer);
 
         for (int row = 0; row < 3; row++) {
             for (int col = 0; col < 3; col++) {
                 char mark = save.boardState.charAt(row * 3 + col);
-                board.setCell(row, col, mark);
                 buttons[row][col].setText(mark == ' ' ? " " : String.valueOf(mark));
             }
         }
 
-        currentPlayer = save.currentPlayer;
         GameSave.delete(getUserName());
 
+        char currentPlayer = engine.getCurrentPlayer();
         lblStatus.setText((isCvcMode ? "Computer " : "Player ") + currentPlayer + "'s turn");
 
         if (isCvcMode) {
@@ -196,14 +161,8 @@ public class TicTacToeController implements Initializable, ServerListener {
 
     private void saveGame() {
         GameSave save = new GameSave();
-        StringBuilder state = new StringBuilder();
-        for (int row = 0; row < 3; row++) {
-            for (int col = 0; col < 3; col++) {
-                state.append(board.getCell(row, col));
-            }
-        }
-        save.boardState = state.toString();
-        save.currentPlayer = currentPlayer;
+        save.boardState = engine.serializeBoard();
+        save.currentPlayer = engine.getCurrentPlayer();
         save.vsComputer = isVsComputer;
         save.cvc = isCvcMode;
         save.difficulty = Session.getDifficulty();
@@ -214,8 +173,8 @@ public class TicTacToeController implements Initializable, ServerListener {
         resetBoardUI();
         isOnlineAi = Session.isCvC();
         if (isOnlineAi) {
-            computer = new Computer();
-            computer.setDifficulty(Session.getDifficulty());
+            onlineAi = new Computer();
+            onlineAi.setDifficulty(Session.getDifficulty());
         }
         serverConnection = Session.getServerConnection();
 
@@ -245,7 +204,7 @@ public class TicTacToeController implements Initializable, ServerListener {
 
     private void handleOnlineClick(int row, int col) {
         if (isOnlineAi) return;
-        if (gameOver || !isMyTurn) {
+        if (onlineGameOver || !isMyTurn) {
             return;
         }
 
@@ -261,107 +220,57 @@ public class TicTacToeController implements Initializable, ServerListener {
     }
 
     private void handleLocalClick(int row, int col) {
-        if (gameOver || isCvcMode) {
+        Engine.MoveResult result = engine.playerMove(row, col);
+        if (!result.accepted) {
             return;
         }
 
-        if (isVsComputer && currentPlayer == 'O'){
-            return;
-        }
+        renderMove(result, "Player ");
 
-        if (!board.placeMark(row, col, currentPlayer)) {
-            return;
-        }
-
-        buttons[row][col].setText(String.valueOf(currentPlayer));
-
-        if (board.hasWinner(currentPlayer)) {
-            lblStatus.setText("Player " + currentPlayer + " wins!");
-            gameOver = true;
-            highlightWinningCombination();
-            return;
-        }
-        if (board.isFull()) {
-            lblStatus.setText("It's a draw!");
-            gameOver = true;
-            return;
-        }
-
-        currentPlayer = (currentPlayer == 'X') ? 'O' : 'X';
-        lblStatus.setText("Player " + currentPlayer + "'s turn");
-
-        if (isVsComputer && !gameOver && currentPlayer == 'O') {
+        if (!result.isGameOver() && isVsComputer && engine.getCurrentPlayer() == 'O') {
             makeComputerMove();
         }
     }
 
-    private void makeComputerMove(){
-        int[] move = computer.getBestMove(board, currentPlayer, 'X');
-        int row = move[0];
-        int col = move[1];
-
-        // voer de zet uit voor de computer
-        if (!board.placeMark(row, col, currentPlayer)) {
+    private void makeComputerMove() {
+        Engine.MoveResult result = engine.computerMove();
+        if (!result.accepted) {
             return;
         }
-
-        buttons[row][col].setText(String.valueOf(currentPlayer));
-
-        if (board.hasWinner(currentPlayer)) {
-            lblStatus.setText("Player " + currentPlayer + " wins!");
-            gameOver = true;
-            highlightWinningCombination();
-            return;
-        }
-        if (board.isFull()) {
-            lblStatus.setText("It's a draw!");
-            gameOver = true;
-            return;
-        }
-
-        // terug naar speler X
-        currentPlayer = 'X';
-        lblStatus.setText("Player " + currentPlayer + "'s turn");
-
+        renderMove(result, "Player ");
     }
 
     private void playCvcTurn() {
-        if (gameOver || !isCvcMode || isOnlineMode) {
+        if (engine.isGameOver() || !isCvcMode || isOnlineMode) {
             return;
         }
 
-        // bepaal welke computer aan de beurt is
-        Computer activeComputer = (currentPlayer == 'X') ? computer : computerO;
-        char opponentMark = (currentPlayer == 'X') ? 'O' : 'X';
-
-        int[] move = activeComputer.getBestMove(board, currentPlayer, opponentMark);
-        if (move == null) return;
-
-        int row = move[0];
-        int col = move[1];
-
-        board.placeMark(row, col, currentPlayer);
-        buttons[row][col].setText(String.valueOf(currentPlayer));
-
-        if (board.hasWinner(currentPlayer)) {
-            lblStatus.setText("Computer " + currentPlayer + " wins!");
-            gameOver = true;
-            highlightWinningCombination();
+        Engine.MoveResult result = engine.computerMove();
+        if (!result.accepted) {
             return;
         }
 
-        if (board.isFull()) {
+        renderMove(result, "Computer ");
+
+        if (!result.isGameOver()) {
+            // vertraging van 600ms tussen beurten zodat je de animatie/stappen ziet
+            scheduleCvcTurn(600);
+        }
+    }
+
+    private void renderMove(Engine.MoveResult result, String actorLabel) {
+        buttons[result.row][result.col].setText(String.valueOf(result.mark));
+
+        if (result.win) {
+            lblStatus.setText(actorLabel + result.mark + " wins!");
+            highlightWinningCombination(result.mark);
+            return;
+        }
+        if (result.draw) {
             lblStatus.setText("It's a draw!");
-            gameOver = true;
             return;
         }
-
-        // wissel
-        currentPlayer = opponentMark;
-        lblStatus.setText("Computer " + currentPlayer + "'s turn");
-
-        // vertraging van 600ms tussen beurten zodat je de animatie/stappen ziet
-        scheduleCvcTurn(600);
+        lblStatus.setText(actorLabel + result.nextPlayer + "'s turn");
     }
 
     private void scheduleCvcTurn(int millis) {
@@ -378,8 +287,8 @@ public class TicTacToeController implements Initializable, ServerListener {
         }
     }
 
-    private void highlightWinningCombination() {
-        String mark = String.valueOf(currentPlayer);
+    private void highlightWinningCombination(char winner) {
+        String mark = String.valueOf(winner);
         String highlightStyle = "-fx-background-color: #ba5a5a; -fx-text-fill: black; -fx-font-weight: bold;";
 
         //Rows
@@ -464,7 +373,7 @@ public class TicTacToeController implements Initializable, ServerListener {
             }
         } else {
             stopCvc();
-            if (!gameOver && !isCvcMode && isGameStarted()) {
+            if (!engine.isGameOver() && !isCvcMode && engine.isStarted()) {
                 Alert dialog = new Alert(Alert.AlertType.CONFIRMATION);
                 dialog.setTitle("Spel opslaan");
                 dialog.setHeaderText(null);
@@ -485,8 +394,8 @@ public class TicTacToeController implements Initializable, ServerListener {
 
     private void resetGame() {
         stopCvc();
+        engine.reset();
         clearBoardUI();
-        currentPlayer = 'X';
         lblStatus.setText(isCvcMode ? "Computer X's turn" : "Player X's turn");
 
         if (isCvcMode) {
@@ -495,27 +404,13 @@ public class TicTacToeController implements Initializable, ServerListener {
     }
 
     private void resetBoardUI() {
+        onlineBoard = new Board();
+        onlineGameOver = false;
         clearBoardUI();
         isMyTurn = false;
     }
 
-    private boolean isGameStarted() {
-        if (board == null) {
-            return false;
-        }
-        for (int row = 0; row < 3; row++) {
-            for (int col = 0; col < 3; col++) {
-                if (board.getCell(row, col) != ' ') {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
     private void clearBoardUI() {
-        board = new Board();
-        gameOver = false;
         for (int row = 0; row < 3; row++) {
             for (int col = 0; col < 3; col++) {
                 buttons[row][col].setText(" ");
@@ -549,10 +444,10 @@ public class TicTacToeController implements Initializable, ServerListener {
                stopAiPause();
                aiPause = new PauseTransition(Duration.millis(AI_MOVE_DELAY_MS));
                aiPause.setOnFinished(e -> {
-                   if (gameOver || !isMyTurn) {
+                   if (onlineGameOver || !isMyTurn) {
                        return;
                    }
-                   int[] move = computer.getBestMove(board, mySymbol, opponentSymbol);
+                   int[] move = onlineAi.getBestMove(onlineBoard, mySymbol, opponentSymbol);
                    isMyTurn = false;
                    serverConnection.sendMove(move[0] * 3 + move[1]);
                });
@@ -572,8 +467,8 @@ public class TicTacToeController implements Initializable, ServerListener {
             boolean isSelf = (serverConnection != null && player.equalsIgnoreCase(getUserName()));
             char symbol = isSelf ? mySymbol : opponentSymbol;
 
-            if (board != null) {
-                board.placeMark(row, col, symbol);
+            if (onlineBoard != null) {
+                onlineBoard.placeMark(row, col, symbol);
             }
             buttons[row][col].setText(String.valueOf(symbol));
 
@@ -587,7 +482,7 @@ public class TicTacToeController implements Initializable, ServerListener {
     public void onGameOver(String result, String comment) {
         Platform.runLater(() -> {
             stopAiPause();
-            gameOver = true;
+            onlineGameOver = true;
             isMyTurn = false;
             if ("WIN".equalsIgnoreCase(result)) {
                 lblStatus.setText("Gewonnen! " + comment);

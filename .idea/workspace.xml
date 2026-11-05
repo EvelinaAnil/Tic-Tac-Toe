@@ -6,12 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="8803c90c-b5da-4649-b37f-17d9ecd0cc74" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/tictactoe2/MainApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/tictactoe2/MainApplication.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/tictactoe2/SelectMenuController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/tictactoe2/SelectMenuController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/tictactoe2/Session.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/tictactoe2/Session.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/tictactoe2/TicTacToeController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/tictactoe2/TicTacToeController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/framework/network/ServerConnection.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/framework/network/ServerConnection.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/TicTacToe.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/TicTacToe.fxml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -27,12 +23,12 @@
     &quot;assignee&quot;: &quot;max-1232&quot;
   }
 }</component>
-  <component name="GithubPullRequestsUISettings">{
-  &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;https://github.com/EvelinaAnil/Tic-Tac-Toe.git&quot;,
-    &quot;accountId&quot;: &quot;c6db12ec-35e4-4a78-9ee5-fcee936941b9&quot;
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/EvelinaAnil/Tic-Tac-Toe",
+    "accountId": "5ea4e816-c581-4d3e-84f8-6195caf7e2cc"
   }
-}</component>
+}]]></component>
   <component name="ProjectColorInfo">{
   &quot;customColor&quot;: &quot;&quot;,
   &quot;associatedIndex&quot;: 7
@@ -53,6 +49,7 @@
     "git-widget-placeholder": "main",
     "junie.onboarding.icon.badge.shown": "true",
     "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/knhou/IdeaProjects/Tic-Tac-Toe",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
