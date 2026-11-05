@@ -94,4 +94,5 @@ public class Session {
     public static void setLoadSavedGame(boolean load) {
         loadSavedGame = load;
     }
+
 }
