@@ -56,6 +56,12 @@ public class SelectMenuController implements Initializable {
 
     @FXML private Circle profile;
 
+    @FXML
+    private void openScoreBoard() {
+        Navigator.goTo("/ScoreBoard.fxml");
+    }
+
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         Timeline crossRotateL = new Timeline(
@@ -202,7 +208,11 @@ public class SelectMenuController implements Initializable {
         greenCard.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
+                Session.setOnline(false);
+                Session.setTournament(false);
+
                 Session.setVsComputer(true);
+                Session.setCvC(false);
                 showDifficultyMenu();
             }
 
@@ -229,10 +239,10 @@ public class SelectMenuController implements Initializable {
 
                 Session.setOnline(result.get() != btnLocal);
                 Session.setTournament(result.get().equals(btnTournament));
-                Session.setVsComputer(true);
+
+                Session.setVsComputer(false);
                 Session.setCvC(true);
-                Session.setDifficulty("HARD");
-                openGameByName("Tic-Tac-Toe");
+                showDifficultyMenu();
             }
         });
     }
@@ -326,33 +336,23 @@ public class SelectMenuController implements Initializable {
 
     private void showDifficultyMenu() {
         addCardContent(redCard, "/img/easy.png", "Easy");
-        redCard.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                Session.setDifficulty("EASY"); // Sla op in Session
-                openGameByName("Tic-Tac-Toe");
-            }
+        redCard.setOnMouseClicked(event -> {
+            Session.setDifficulty("EASY");
+            openGameByName("Tic-Tac-Toe");
         });
 
         addCardContent(greenCard, "/img/normal.png", "Medium");
-        greenCard.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                Session.setDifficulty("MEDIUM"); // Sla op in Session
-                openGameByName("Tic-Tac-Toe");
-            }
+        greenCard.setOnMouseClicked(event -> {
+            Session.setDifficulty("MEDIUM");
+            openGameByName("Tic-Tac-Toe");
         });
 
         addCardContent(blueCard, "/img/hard.png", "Hard");
-        blueCard.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                Session.setDifficulty("HARD"); // Sla op in Session
-                openGameByName("Tic-Tac-Toe");
-            }
+        blueCard.setOnMouseClicked(event -> {
+            Session.setDifficulty("HARD");
+            openGameByName("Tic-Tac-Toe");
         });
     }
-
 
 
     private void makeCardZoomable(VBox card) {

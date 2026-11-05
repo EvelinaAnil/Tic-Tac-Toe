@@ -7,7 +7,8 @@ module com.example.tictactoe2 {
     requires java.sql;
 
     opens com.example.tictactoe2 to javafx.fxml;
-    exports com.example.tictactoe2;
+    opens framework to javafx.base;
 
+    exports com.example.tictactoe2;
     exports framework.network;
 }

@@ -1,6 +1,7 @@
 package com.example.tictactoe2;
 
 import framework.GameSave;
+import framework.Scoreboard;
 import framework.network.ServerConnection;
 import framework.network.ServerListener;
 import games.tictactoe.Board;
@@ -68,6 +69,9 @@ public class TicTacToeController implements Initializable, ServerListener {
     private Computer onlineAi;
     private static final int AI_MOVE_DELAY_MS = 800;
     private PauseTransition aiPause;
+
+    private final Scoreboard scoreBoard = new Scoreboard();
+    private boolean scoreSaved = false;
 
     private final Button[][] buttons = new Button[3][3];
 
@@ -137,6 +141,7 @@ public class TicTacToeController implements Initializable, ServerListener {
         }
 
         stopCvc();
+        scoreSaved = false;
         engine.restore(save.boardState, save.currentPlayer);
 
         for (int row = 0; row < 3; row++) {
@@ -171,6 +176,7 @@ public class TicTacToeController implements Initializable, ServerListener {
 
     private void initOnline() {
         resetBoardUI();
+        scoreSaved = false;
         isOnlineAi = Session.isCvC();
         if (isOnlineAi) {
             onlineAi = new Computer();
@@ -194,6 +200,64 @@ public class TicTacToeController implements Initializable, ServerListener {
         isMyTurn = false;
     }
 
+    // =========================================================
+    // SCOREBOARD
+    // =========================================================
+
+    private void saveResult(String result) {
+        if (scoreSaved) {
+            return;
+        }
+
+        String username = getUserName();
+        if (username == null || username.isBlank()) {
+            System.err.println("Score niet opgeslagen: geen ingelogde gebruiker.");
+            return;
+        }
+
+        boolean saved = scoreBoard.saveScore(username, "Tic-Tac-Toe", getGameMode(), result);
+        if (saved) {
+            scoreSaved = true;
+            System.out.println("Score opgeslagen: " + username + " | " + getGameMode() + " | " + result);
+        }
+    }
+
+    private String getGameMode() {
+        if (isOnlineMode) {
+            if (Session.isTournament()) {
+                return "Online Tournament";
+            }
+            if (isOnlineAi) {
+                return "Online vs Computer";
+            }
+            return "Online Player vs Player";
+        }
+        if (isCvcMode) {
+            return "Computer vs Computer";
+        }
+        if (isVsComputer) {
+            return "Player vs Computer";
+        }
+        return "Player vs Player";
+    }
+
+    private String normalizeOnlineResult(String result) {
+        if (result == null || result.isBlank()) {
+            return "UNKNOWN";
+        }
+        String normalized = result.trim().toUpperCase();
+        if (normalized.contains("DRAW") || normalized.contains("TIE")) {
+            return "DRAW";
+        }
+        if (normalized.equals("WIN") || normalized.contains("WON")) {
+            return "WIN";
+        }
+        if (normalized.equals("LOSS") || normalized.contains("LOSE")) {
+            return "LOSS";
+        }
+        return normalized;
+    }
+
     private void handleClick(int row, int col) {
         if (isOnlineMode) {
             handleOnlineClick(row, col);
@@ -209,6 +273,10 @@ public class TicTacToeController implements Initializable, ServerListener {
         }
 
         if (!buttons[row][col].getText().trim().isEmpty()) {
+            return;
+        }
+
+        if (serverConnection == null) {
             return;
         }
 
@@ -264,13 +332,28 @@ public class TicTacToeController implements Initializable, ServerListener {
         if (result.win) {
             lblStatus.setText(actorLabel + result.mark + " wins!");
             highlightWinningCombination(result.mark);
+            saveLocalResult(result.mark, false);
             return;
         }
         if (result.draw) {
             lblStatus.setText("It's a draw!");
+            saveLocalResult(result.mark, true);
             return;
         }
         lblStatus.setText(actorLabel + result.nextPlayer + "'s turn");
+    }
+
+    private void saveLocalResult(char winnerMark, boolean draw) {
+        if (draw) {
+            saveResult("DRAW");
+            return;
+        }
+        if (isCvcMode) {
+            saveResult("COMPUTER_" + winnerMark + "_WIN");
+            return;
+        }
+        // The logged-in player is X (PvC and local PvP).
+        saveResult(winnerMark == 'X' ? "WIN" : "LOSS");
     }
 
     private void scheduleCvcTurn(int millis) {
@@ -365,6 +448,13 @@ public class TicTacToeController implements Initializable, ServerListener {
     }
 
     @FXML
+    private void openScoreBoard() {
+        stopCvc();
+        stopAiPause();
+        Navigator.goTo("/ScoreBoard.fxml");
+    }
+
+    @FXML
     private void onBack() {
         if (isOnlineMode) {
             if (serverConnection != null) {
@@ -394,6 +484,7 @@ public class TicTacToeController implements Initializable, ServerListener {
 
     private void resetGame() {
         stopCvc();
+        scoreSaved = false;
         engine.reset();
         clearBoardUI();
         lblStatus.setText(isCvcMode ? "Computer X's turn" : "Player X's turn");
@@ -423,6 +514,7 @@ public class TicTacToeController implements Initializable, ServerListener {
     public void onMatchStarted(String gameType, String opponent, boolean isStartingPlayer) {
         Platform.runLater(() -> {
             resetBoardUI();
+            scoreSaved = false;
             if (isStartingPlayer) {
                 mySymbol = 'X';
                 opponentSymbol = 'O';
@@ -444,10 +536,13 @@ public class TicTacToeController implements Initializable, ServerListener {
                stopAiPause();
                aiPause = new PauseTransition(Duration.millis(AI_MOVE_DELAY_MS));
                aiPause.setOnFinished(e -> {
-                   if (onlineGameOver || !isMyTurn) {
+                   if (onlineGameOver || !isMyTurn || serverConnection == null) {
                        return;
                    }
                    int[] move = onlineAi.getBestMove(onlineBoard, mySymbol, opponentSymbol);
+                   if (move == null) {
+                       return;
+                   }
                    isMyTurn = false;
                    serverConnection.sendMove(move[0] * 3 + move[1]);
                });
@@ -461,10 +556,16 @@ public class TicTacToeController implements Initializable, ServerListener {
     @Override
     public void onMoveReceived(String player, int move, String details) {
         Platform.runLater(() -> {
+            if (move < 0 || move >= 9) {
+                return;
+            }
+
             int row = move / 3;
             int col = move % 3;
 
-            boolean isSelf = (serverConnection != null && player.equalsIgnoreCase(getUserName()));
+            boolean isSelf = (serverConnection != null
+                    && player != null
+                    && player.equalsIgnoreCase(getUserName()));
             char symbol = isSelf ? mySymbol : opponentSymbol;
 
             if (onlineBoard != null) {
@@ -484,12 +585,18 @@ public class TicTacToeController implements Initializable, ServerListener {
             stopAiPause();
             onlineGameOver = true;
             isMyTurn = false;
-            if ("WIN".equalsIgnoreCase(result)) {
+
+            String databaseResult = normalizeOnlineResult(result);
+            saveResult(databaseResult);
+
+            if ("WIN".equals(databaseResult)) {
                 lblStatus.setText("Gewonnen! " + comment);
-            } else if ("LOSS".equalsIgnoreCase(result)) {
+            } else if ("LOSS".equals(databaseResult)) {
                 lblStatus.setText("Verloren! " + comment);
-            } else {
+            } else if ("DRAW".equals(databaseResult)) {
                 lblStatus.setText("Gelijkspel! " + comment);
+            } else {
+                lblStatus.setText(comment);
             }
         });
     }

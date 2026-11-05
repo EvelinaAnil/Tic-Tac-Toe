@@ -11,6 +11,7 @@
 <?import javafx.scene.shape.Polygon?>
 <?import javafx.scene.shape.SVGPath?>
 
+<?import javafx.scene.control.Button?>
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0" prefWidth="750.0" style="-fx-background-color: F7E49B;" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.tictactoe2.SelectMenuController">
    <top>
       <HBox fx:id="headerBox" alignment="CENTER" prefHeight="90.0" prefWidth="750.0">
@@ -26,12 +27,23 @@
                </children>
             </Pane>
 
+
             <Region HBox.hgrow="ALWAYS" />
 
             <Label fx:id="selectLabel" styleClass="custom-label" stylesheets="@label.css" text="SELECT GAMEMODE" textOverrun="CLIP" />
          <Circle fx:id="profile"  radius="30.0"/>
+               <!-- Scores button left of the title -->
 
+               <Button text="Scores"
+                       onAction="#openScoreBoard"
+                       style="-fx-background-color: #A4CE8B;
+                     -fx-background-radius: 15;
+                     -fx-font-size: 12px;
+                     -fx-font-weight: bold;
+                     -fx-padding: 7 18 7 18;
+                     -fx-cursor: hand;" />
             <Region HBox.hgrow="ALWAYS" />
+
 
             <Pane prefHeight="70.0" prefWidth="180.0">
                <children>
