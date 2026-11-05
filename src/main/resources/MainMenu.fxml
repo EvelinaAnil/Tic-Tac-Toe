@@ -53,16 +53,6 @@
                        textOverrun="CLIP" />
 
                 <Circle fx:id="profile" radius="30.0"/>
-                <!-- Scores button left of the title -->
-
-                <Button text="Scores"
-                        onAction="#openScoreBoard"
-                        style="-fx-background-color: #A4CE8B;
-               -fx-background-radius: 15;
-               -fx-font-size: 12px;
-               -fx-font-weight: bold;
-               -fx-padding: 7 18 7 18;
-               -fx-cursor: hand;" />
 
                 <Region HBox.hgrow="ALWAYS" />
 
